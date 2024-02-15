@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->text('alamat')->nullable()->comment('diisi di halaman profil');
+            $table->unsignedBigInteger('jenisKelamin')->nullable()->comment('diisi di halama profil profil');
+            $table->dateTime('tglLahir')->nullable()->comment('diisi di halaman profil');
+            $table->string('noHP')->nullable()->comment('diisi di halaman profil');
             $table->rememberToken();
             $table->timestamps();
         });
