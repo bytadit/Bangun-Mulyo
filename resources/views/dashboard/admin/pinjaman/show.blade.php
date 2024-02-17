@@ -32,39 +32,50 @@
     <div class="row">
         <div class="col">
             <div class="h-100">
-                {{-- @include('dashboard.admin.angsuran-kelompok.modals.create') --}}
+                {{-- <div class="row mb-3 pb-1">
+                    <div class="col-12">
+                        <div class="d-flex align-items-lg-center flex-lg-row flex-column float-end">
+                            <button type="button" class="btn btn-success btn-lg btn-label waves-effect waves-light mx-2" data-bs-toggle="modal" data-bs-target="#createDataPeminjamKelompok">
+                                <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
+                                Tambah Anggota
+                            </button>
+                        </div>
+                    </div>
+                    <!--end col-->
+                </div> --}}
+                <!--end row-->
+                @include('dashboard.admin.angsuran-kelompok.modals.create')
                 <div class="row">
                     <div class="col-lg-12">
-                        {{-- @include('dashboard.admin.pinjaman-anggota.modals.create') --}}
-                        @include('dashboard.admin.pinjaman.modals.edit-full')
+                        @include('dashboard.admin.pinjaman-anggota.modals.create')
+                        @if($pinjaman_anggota->count() > 0)
+                            @include('dashboard.admin.pinjaman-anggota.modals.edit')
+                        @endif
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
-                                <h3 class="card-title mb-0 flex-grow-1">Detail Pinjaman Kelompok {{ $kelompok_name }} Periode Ke - {{ $periode }}</h3>
+                                <h3 class="card-title mb-0 flex-grow-1">Detail Pinjaman Anggota {{ $anggota_name }}</h3>
                                 <div class="flex-shrink-0">
                                     <div>
-                                        <button type="button" class="btn btn-success btn-sm shadow-none"  data-bs-toggle="modal" data-bs-target="#editFullDataPinjaman">
-                                            <i class="ri-pencil-line"></i>
-                                            Ubah Data
-                                        </button>
+                                        @if($pinjaman_anggota->count() == 0)
+                                            <button type="button" class="btn btn-success btn-sm shadow-none"  data-bs-toggle="modal" data-bs-target="#createDataPinjamanAnggota">
+                                                <i class="ri-pencil-line"></i>
+                                                Atur Data
+                                            </button>
+                                        @elseif($pinjaman_anggota->count() > 0)
+                                            <button type="button" class="btn btn-success btn-sm shadow-none"  data-bs-toggle="modal" data-bs-target="#editDataPinjamanAnggota">
+                                                <i class="ri-pencil-line"></i>
+                                                Ubah Data
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive table-card">
                                     <div data-simplebar style="max-height: 405px;">
-                                        <table class="table align-left table-borderless table-hover">
+                                        <table class="table table-borderless align-middle">
                                             <tbody>
-                                                <tr>
-                                                    <td class="fw-medium">
-                                                        Keterangan
-                                                    </td>
-                                                    <td> : </td>
-                                                    <td>
-                                                        <h6 class="fs-15 mb-1">
-                                                            {{  $pinjaman->first()->keterangan == 1 ? 'Lunas' : 'Belum Lunas' }}
-                                                        </h6>
-                                                    </td>
-                                                </tr>
+
                                                 <tr>
                                                     <td class="fw-medium">
                                                         Jumlah Peminjaman
@@ -72,40 +83,22 @@
                                                     <td> : </td>
                                                     <td>
                                                         <h6 class="fs-15 mb-1">
-                                                            @currency($pinjaman->first()->jumlah_pinjaman)
+                                                            @if($pinjaman_anggota->first()->jumlah_pinjaman == null)
+                                                                Belum Diatur
+                                                            @else
+                                                                @currency($pinjaman_anggota->first()->jumlah_pinjaman)
+                                                            @endif
                                                         </h6>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-medium">
-                                                        Jumlah Angsuran Pokok
+                                                        Keterangan
                                                     </td>
                                                     <td> : </td>
                                                     <td>
                                                         <h6 class="fs-15 mb-1">
-                                                            @currency($pinjaman->first()->jumlah_angsuran)
-                                                        </h6>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-medium">
-                                                        Jumlah Iuran/Jasa Pokok
-                                                    </td>
-                                                    <td> : </td>
-                                                    <td>
-                                                        <h6 class="fs-15 mb-1">
-                                                            @currency($pinjaman->first()->jumlah_iuran)
-                                                        </h6>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-medium">
-                                                        Jangka Waktu
-                                                    </td>
-                                                    <td> : </td>
-                                                    <td>
-                                                        <h6 class="fs-15 mb-1">
-                                                            {{ $pinjaman->first()->jangka_waktu }} Bulan
+                                                            {{ $pinjaman_anggota->first()->keterangan == null ? 'Belum Diatur' :  ($pinjaman_anggota->first()->keterangan == 1 ? 'Lunas' : 'Belum Lunas') }}
                                                         </h6>
                                                     </td>
                                                 </tr>
@@ -115,16 +108,7 @@
                                                     </td>
                                                     <td> : </td>
                                                     <td>
-                                                        <h6 class="fs-15 mb-1">{{ date('d-m-Y', strtotime($pinjaman->first()->tgl_pinjaman)) }}</h6>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-medium">
-                                                        Tanggal Jatuh Tempo
-                                                    </td>
-                                                    <td> : </td>
-                                                    <td>
-                                                        <h6 class="fs-15 mb-1">{{ date('d-m-Y', strtotime($pinjaman->first()->tgl_jatuh_tempo)) }}</h6>
+                                                        <h6 class="fs-15 mb-1">{{ $pinjaman_anggota->first()->tgl_pinjaman == null ? 'Belum Diatur' : date('d-m-Y', strtotime($pinjaman_anggota->first()->tgl_pinjaman)) }}</h6>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -133,7 +117,7 @@
                                                     </td>
                                                     <td> : </td>
                                                     <td>
-                                                        <h6 class="fs-15 mb-1">{{ date('d-m-Y', strtotime($pinjaman->first()->tgl_pencairan)) }}</h6>
+                                                        <h6 class="fs-15 mb-1">{{ $pinjaman_anggota->first()->tgl_pencairan == null ? 'Belum Diatur' : date('d-m-Y', strtotime($pinjaman_anggota->first()->tgl_pencairan)) }}</h6>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -142,18 +126,7 @@
                                                     </td>
                                                     <td> : </td>
                                                     <td>
-                                                        <h6 class="fs-15 mb-1">{{ date('d-m-Y', strtotime($pinjaman->first()->tgl_pelunasan)) }}</h6>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-medium">
-                                                        Keperluan
-                                                    </td>
-                                                    <td> : </td>
-                                                    <td>
-                                                        <h6 class="fs-15 mb-1">
-                                                            {{ $pinjaman->first()->keperluan }}
-                                                        </h6>
+                                                        <h6 class="fs-15 mb-1">{{ $pinjaman_anggota->first()->tgl_pelunasan == null ? 'Belum Diatur' : date('d-m-Y', strtotime($pinjaman_anggota->first()->tgl_pelunasan)) }}</h6>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -173,17 +146,19 @@
         <div class="col">
             <div class="h-100">
                 <!--end row-->
-                @include('dashboard.admin.pinjaman-anggota.modals.create')
+                @if($pinjaman_anggota->count() > 0)
+                    @include('dashboard.admin.angsuran-kelompok.modals.create')
+                @endif
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
-                                <h3 class="card-title mb-0 flex-grow-1">Rencana Angsuran Kelompok {{ $kelompok_name }} Periode Ke - {{ $periode }}</h3>
+                                <h3 class="card-title mb-0 flex-grow-1">Riwayat Angsuran Anggota {{ $anggota_name }}</h3>
                                 <div class="flex-shrink-0">
                                     <div>
-                                        <button type="button" class="{{ $anggotas->whereNotIn('id', $pinjaman_anggotas->pluck('anggota_id'))->count() == 0 ? 'disabled' : '' }} btn btn-success btn-sm shadow-none" data-bs-toggle="modal" data-bs-target="#createDataPinjamanAnggota">
+                                        <button type="button" class="{{ $pinjaman_anggota->count() == 0 ? 'disabled' : '' }} btn btn-success btn-sm shadow-none" data-bs-toggle="modal" data-bs-target="#createDataAngsuranAnggota">
                                             <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
-                                            Tambah Pinjaman Anggota
+                                            Tambah Riwayat Angsuran
                                         </button>
                                     </div>
                                 </div>
@@ -193,58 +168,52 @@
                                     <thead>
                                     <tr>
                                         <th>No.</th>
-                                        <th>Nama Anggota</th>
-                                        <th>Jumlah Pinjaman</th>
-                                        <th>Nilai Angsuran</th>
-                                        <th>Pokok</th>
+                                        <th>Tanggal Angsuran</th>
                                         <th>Iuran</th>
-                                        <th>Jaminan</th>
-                                        <th>Nilai Jaminan</th>
+                                        <th>Pokok Dibayarkan</th>
+                                        <th>Pokok Tunggakan</th>
+                                        <th>Pokok Sisa</th>
                                         <th>Keterangan</th>
                                         <th>Aksi</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($pinjaman_anggotas as $pinjaman_anggota)
+                                    @foreach($angsurans as $angsuran)
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
                                             <td>
-                                                {{$pinjaman_anggota->anggotaKelompok->nama}}
+                                                {{$angsuran->tgl_angsuran}}
                                             </td>
                                             <td>
-                                                {{$pinjaman_anggota->jumlah_pinjaman}}
+                                                {{$angsuran->iuran}}
                                             </td>
                                             <td>
-                                                {{$pinjaman_anggota->nilai_angsuran}}
+                                                {{$angsuran->pokok_dibayar}}
                                             </td>
                                             <td>
-                                                {{$pinjaman_anggota->pokok}}
+                                                {{$angsuran->pokok_tunggakan}}
                                             </td>
                                             <td>
-                                                {{$pinjaman_anggota->iuran}}
+                                                {{$angsuran->pokok_sisa}}
                                             </td>
                                             <td>
-                                                {{$pinjaman_anggota->jaminan}}
-                                            </td>
-                                            <td>
-                                                {{$pinjaman_anggota->nilai_jaminan}}
-                                            </td>
-                                            <td>
-                                                {{$pinjaman_anggota->keterangan}}
+                                                {{$angsuran->keterangan}}
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataPinjamanAnggota{{$pinjaman_anggota->id}}">
+                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataAngsuranAnggota{{$angsuran->id}}">
                                                         <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
                                                     </button>
-                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataPinjamanAnggota{{$pinjaman_anggota->id}}">
+                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataAngsuranAnggota{{$angsuran->id}}">
                                                         <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
                                                     </button>
                                                 </div>
                                             </td>
                                         </tr>
-                                        @include('dashboard.admin.pinjaman-anggota.modals.edit')
-                                        @include('dashboard.admin.pinjaman-anggota.modals.delete')
+                                        @if($pinjaman_anggota->count() > 0)
+                                            @include('dashboard.admin.angsuran-kelompok.modals.edit')
+                                            @include('dashboard.admin.angsuran-kelompok.modals.delete')
+                                        @endif
                                     @endforeach
                                     </tbody>
                                 </table>

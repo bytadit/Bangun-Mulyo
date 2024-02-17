@@ -73,12 +73,12 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#menuPeminjam" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="menuPeminjam">
-                        <i class="ri-contacts-book-line"></i> <span>Peminjam</span>
+                        <i class="ri-contacts-book-line"></i> <span>Data Peminjam</span>
                     </a>
-                    <div class="collapse menu-dropdown {{ Request::routeIs('peminjam-kelompok.index') || Request::routeIs('peminjam-single.index') ? 'show' : '' }}" id="menuPeminjam">
+                    <div class="collapse menu-dropdown {{ Request::routeIs('peminjam-kelompok.index') || Request::routeIs('peminjam-single.index') || Request::is('peminjam-kelompok/*') || Request::is('peminjam-single/*') ? 'show' : '' }}" id="menuPeminjam">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link menu-link fw-medium {{ Request::routeIs('peminjam-kelompok.index') ? 'active fw-bold' : '' }}"
+                                <a class="nav-link menu-link fw-medium {{ Request::routeIs('peminjam-kelompok.index') || Request::is('peminjam-kelompok/*') ? 'active fw-bold' : '' }}"
                                     href="{{ route('peminjam-kelompok.index') }}" role="button" aria-expanded="false"
                                     aria-controls="sidebarApps">
                                     <i class="ri-team-fill"></i> <span>@lang('Kelompok')</span>

@@ -21,9 +21,9 @@
                         </div><!--end col-->
                         <div class="col-lg-12">
                             <div>
-                                <label for="bunga" class="form-label">Bunga</label>
-                                <input type="number" min="1" class="form-control" name="bunga" id="bunga"
-                                    placeholder="Masukkan bunga...">
+                                <label for="iuran" class="form-label">Iuran</label>
+                                <input type="number" min="1" class="form-control" name="iuran" id="iuran"
+                                    placeholder="Masukkan iuran...">
                             </div>
                         </div><!--end col-->
                         <div class="col-lg-12">
@@ -53,8 +53,8 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="hstack gap-2 justify-content-end">
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
                             </div>
                         </div><!--end col-->
                     </div><!--end row-->

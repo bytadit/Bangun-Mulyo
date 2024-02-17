@@ -48,7 +48,6 @@
                                         <th>Alamat</th>
                                         <th>Nomor HP</th>
                                         <th>Nama Dusun</th>
-                                        <th>Dokumen</th>
                                         <th>Aksi</th>
                                     </tr>
                                     </thead>
@@ -68,16 +67,16 @@
                                             <td>
                                                 {{$kelompok->nama_dusun}}
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 <div class="d-flex align-items-center fw-medium">
                                                     <a class="btn btn-sm btn-soft-success mr-1" href="#">
                                                         <i class="ri-file-text-fill"></i> <span >@lang('Cetak Proposal')</span>
                                                     </a>
                                                 </div>
-                                            </td>
+                                            </td> --}}
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('anggota-kelompok.index', ['kelompok' => $kelompok->id]) }}">
+                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('detail.index', ['kelompok' => $kelompok->id]) }}">
                                                         <i class="ri-group-2-fill"></i> <span >@lang('Detail Kelompok')</span>
                                                     </a>
                                                     <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editData{{$kelompok->id}}">

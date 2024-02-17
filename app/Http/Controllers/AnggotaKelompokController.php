@@ -8,6 +8,7 @@ use App\Models\Pinjaman;
 use Illuminate\Http\Request;
 
 use Alert;
+use App\Models\PinjamanAnggota;
 use App\Models\ReferensiJabatan;
 
 class AnggotaKelompokController extends Controller
@@ -18,14 +19,16 @@ class AnggotaKelompokController extends Controller
     public function index(Request $request)
     {
         $kelompok = $request->route('kelompok');
+        $kelompoks = Peminjam::where('id', $kelompok)->get();
         $anggotas = AnggotaKelompok::where('kelompok_id', $kelompok)->get();
-        $pinjaman = Pinjaman::where('peminjam_id', $kelompok)->get();
+        $pinjamans = Pinjaman::where('peminjam_id', $kelompok)->get();
         $jabatans = ReferensiJabatan::all();
         return view('dashboard.admin.anggota-kelompok.index', [
-            'title' => 'Anggota Kelompok ' . Peminjam::where('id', $kelompok)->first()->nama,
+            'title' => 'Detail Kelompok ' . Peminjam::where('id', $kelompok)->first()->nama,
             'anggotas' => $anggotas,
+            'kelompoks' => $kelompoks,
             'jabatans' => $jabatans,
-            'pinjaman' => $pinjaman,
+            'pinjamans' => $pinjamans,
             'kelompok' => $kelompok,
             'kelompok_name' => Peminjam::where('id', $kelompok)->first()->nama
         ]);
@@ -55,11 +58,12 @@ class AnggotaKelompokController extends Controller
             'alamat' => $request->alamat,
             'tgl_lahir' => $request->tgl_lahir,
             'pekerjaan' => $request->pekerjaan,
-            'jaminan' => $request->jaminan,
-            'nilai_jaminan'=> $request->nilai_jaminan,
         ]);
+        // PinjamanAnggota::create([
+        //     'anggota_id' => $data->id,
+        // ]);
         Alert::success('Sukses!', 'Data Anggota Kelompok berhasil ditambahkan!');
-        return redirect()->route('anggota-kelompok.index', ['kelompok' => $peminjam_id]);
+        return redirect()->route('detail.index', ['kelompok' => $peminjam_id]);
     }
 
     /**
@@ -96,11 +100,9 @@ class AnggotaKelompokController extends Controller
                 'alamat' => $request->ealamat,
                 'tgl_lahir' => $request->etgl_lahir,
                 'pekerjaan' => $request->epekerjaan,
-                'jaminan' => $request->ejaminan,
-                'nilai_jaminan'=> $request->enilai_jaminan,
             ]);
         Alert::success('Sukses!', 'Data anggota kelompok berhasil diubah!');
-        return redirect()->route('anggota-kelompok.index', ['kelompok' => $peminjam_id]);
+        return redirect()->route('detail.index', ['kelompok' => $peminjam_id]);
     }
 
     /**
@@ -112,6 +114,6 @@ class AnggotaKelompokController extends Controller
         $peminjam_id = $request->peminjam_id;
         AnggotaKelompok::destroy($anggota_id);
         Alert::success('Sukses!', 'Data anggota kelompok berhasil dihapus!');
-        return redirect()->route('anggota-kelompok.index', ['kelompok' => $peminjam_id]);
+        return redirect()->route('detail.index', ['kelompok' => $peminjam_id]);
     }
 }

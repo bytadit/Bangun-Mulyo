@@ -109,7 +109,7 @@
                   {{-- BUTTON --}}
                   <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Tambah Data</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                   </div>
                 </form>
               </div>
@@ -224,7 +224,7 @@
                       <p id="detail-description"></p>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     </div>
                   </div>
                 </div>
@@ -311,7 +311,7 @@
 
                         <div class="modal-footer">
                           <button type="submit" class="btn btn-primary">Update Data</button>
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                         </div>
 
                       </form>

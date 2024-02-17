@@ -1,8 +1,8 @@
-<div id="deleteDataAnggotaKelompok{{$anggota->id}}" class="modal fade bs-example-modal-center" tabindex="-1" role="dialog" aria-labelledby="modalDeleteDataAnggotaKelompok{{$anggota->id}}" aria-hidden="true">
+<div id="deleteDataPinjamanAnggota{{ $pinjaman_anggota->id }}" class="modal fade bs-example-modal-center" tabindex="-1" role="dialog" aria-labelledby="modalDeleteDataPinjamanAnggota{{$pinjaman_anggota->id}}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center p-5">
-                <form method="post" enctype="multipart/form-data" action="{{ route('anggota-kelompok.destroy', ['kelompok' => $kelompok, 'anggota_kelompok' => $anggota->id]) }}">
+                <form method="post" enctype="multipart/form-data" action="{{ route('detail.destroy', ['kelompok' => $kelompok, 'anggota_kelompok' => $anggota->id]) }}">
                     @csrf
                     @method('delete')
                     <input type="hidden" name="peminjam_id" value="{{$kelompok}}">

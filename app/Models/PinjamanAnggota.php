@@ -15,8 +15,8 @@ class PinjamanAnggota extends Model
     {
         return $this->belongsTo(AnggotaKelompok::class, 'anggota_id');
     }
-    public function angsuran(): HasMany
+    public function pinjamanKelompok(): BelongsTo
     {
-        return $this->hasMany(Angsuran::class, 'pinjaman_anggota_id');
+        return $this->belongsTo(Pinjaman::class, 'pinjaman_id');
     }
 }

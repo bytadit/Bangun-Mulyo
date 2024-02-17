@@ -13,15 +13,17 @@ return new class extends Migration
     {
         Schema::create('pinjaman_anggotas', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('pinjaman_id');
+            $table->foreign('pinjaman_id')->references('id')->on('pinjaman')->onDelete('cascade');
             $table->unsignedBigInteger('anggota_id');
             $table->foreign('anggota_id')->references('id')->on('anggota_kelompoks')->onDelete('cascade');
-            $table->integer('pinjaman_ke');
-            $table->integer('jumlah_pinjaman');
-            $table->dateTime('tgl_pinjaman')->nullable();
-            $table->dateTime('tgl_pencairan')->nullable();
-            $table->dateTime('tgl_pelunasan')->nullable();
-            $table->integer('nilai_angsuran');
-
+            $table->integer('jumlah_pinjaman')->nullable();
+            $table->integer('nilai_angsuran')->nullable();
+            $table->integer('pokok')->nullable();
+            $table->integer('iuran')->nullable();
+            $table->string('jaminan')->nullable();;
+            $table->integer('nilai_jaminan')->nullable();;
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

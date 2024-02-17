@@ -40,7 +40,7 @@
                                 <h1 class="mb-0">Daftar Inventaris</h1>
                             </div>
                             <div class="card-body">
-                                <table id="alternative-pagination" class="table nowrap dt-responsive align-middle table-hover table-bordered" style="width:100%">
+                                <table id="scroll-horizontal" class="table nowrap align-middle table-hover table-bordered" style="width:100%">
                                     <thead>
                                     <tr>
                                         <th>No.</th>

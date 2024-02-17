@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" enctype="multipart/form-data" action="{{ route('anggota-kelompok.store', ['kelompok' => $kelompok]) }}">
+                <form method="post" enctype="multipart/form-data" action="{{ route('detail.store', ['kelompok' => $kelompok]) }}">
                     @csrf
                     <div class="row g-3">
                         <input type="hidden" name="peminjam_id" value="{{ $kelompok }}">
@@ -68,20 +68,7 @@
                                     placeholder="Masukkan pekerjaan anggota...">
                             </div>
                         </div><!--end col-->
-                        <div class="col-lg-12">
-                            <div>
-                                <label for="jaminan" class="form-label">Jaminan Anggota Kelompok</label>
-                                <input type="text" class="form-control" name="jaminan" id="jaminan"
-                                    placeholder="Masukkan jaminan anggota...">
-                            </div>
-                        </div><!--end col-->
-                        <div class="col-lg-12">
-                            <div>
-                                <label for="nilai_jaminan" class="form-label">Nilai Jaminan</label>
-                                <input type="number" min="1" class="form-control" name="nilai_jaminan"
-                                    id="nilai_jaminan" placeholder="Masukkan nilai jaminan...">
-                            </div>
-                        </div><!--end col-->
+
                         <div class="col-lg-12">
                             <label for="alamat" class="form-label">Alamat<span
                                     style="color: red;">*</span></label>
@@ -89,8 +76,8 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="hstack gap-2 justify-content-end">
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
                             </div>
                         </div><!--end col-->
                     </div><!--end row-->

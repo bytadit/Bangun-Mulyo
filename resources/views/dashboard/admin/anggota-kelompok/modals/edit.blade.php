@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" enctype="multipart/form-data" action="{{ route('anggota-kelompok.update', ['kelompok' => $kelompok, 'anggota_kelompok' => $anggota->id]) }}">
+                <form method="post" enctype="multipart/form-data" action="{{ route('detail.update', ['kelompok' => $kelompok, 'detail' => $anggota->id]) }}">
                     @csrf
                     @method('put')
                     <div class="row g-3">
@@ -71,28 +71,14 @@
                             </div>
                         </div><!--end col-->
                         <div class="col-lg-12">
-                            <div>
-                                <label for="ejaminan" class="form-label">Jaminan Anggota Kelompok</label>
-                                <input type="text" value="{{ $anggota->jaminan }}" class="form-control" name="ejaminan" id="ejaminan"
-                                    placeholder="Masukkan jaminan anggota...">
-                            </div>
-                        </div><!--end col-->
-                        <div class="col-lg-12">
-                            <div>
-                                <label for="enilai_jaminan" class="form-label">Nilai Jaminan</label>
-                                <input type="number" min="1" value="{{ $anggota->nilai_jaminan }}" class="form-control" name="enilai_jaminan"
-                                    id="enilai_jaminan" placeholder="Masukkan nilai jaminan...">
-                            </div>
-                        </div><!--end col-->
-                        <div class="col-lg-12">
                             <label for="ealamat" class="form-label">Alamat<span
                                     style="color: red;">*</span></label>
                             <textarea rows="3" name="ealamat" class="form-control" id="ealamat">{{ $anggota->alamat }}</textarea>
                         </div>
                         <div class="col-lg-12">
                             <div class="hstack gap-2 justify-content-end">
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
                             </div>
                         </div><!--end col-->
                     </div><!--end row-->

@@ -122,8 +122,8 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="hstack gap-2 justify-content-end">
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary" id="submit-btn" value="false">Submit</button>
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary" id="submit-btn" value="false">Simpan</button>
                             </div>
                         </div><!--end col-->
                     </div><!--end row-->

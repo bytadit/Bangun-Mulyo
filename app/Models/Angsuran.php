@@ -10,8 +10,8 @@ class Angsuran extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-    public function pinjamanAnggota(): BelongsTo
+    public function pinjaman(): BelongsTo
     {
-        return $this->belongsTo(PinjamanAnggota::class, 'pinjaman_anggota_id');
+        return $this->belongsTo(Pinjaman::class, 'pinjaman_id');
     }
 }
