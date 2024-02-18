@@ -63,7 +63,7 @@ class AnggotaKelompokController extends Controller
         //     'anggota_id' => $data->id,
         // ]);
         Alert::success('Sukses!', 'Data Anggota Kelompok berhasil ditambahkan!');
-        return redirect()->route('detail.index', ['kelompok' => $peminjam_id]);
+        return redirect()->route('detail-kelompok.index', ['kelompok' => $peminjam_id]);
     }
 
     /**
@@ -102,7 +102,7 @@ class AnggotaKelompokController extends Controller
                 'pekerjaan' => $request->epekerjaan,
             ]);
         Alert::success('Sukses!', 'Data anggota kelompok berhasil diubah!');
-        return redirect()->route('detail.index', ['kelompok' => $peminjam_id]);
+        return redirect()->route('detail-kelompok.index', ['kelompok' => $peminjam_id]);
     }
 
     /**
@@ -114,6 +114,6 @@ class AnggotaKelompokController extends Controller
         $peminjam_id = $request->peminjam_id;
         AnggotaKelompok::destroy($anggota_id);
         Alert::success('Sukses!', 'Data anggota kelompok berhasil dihapus!');
-        return redirect()->route('detail.index', ['kelompok' => $peminjam_id]);
+        return redirect()->route('detail-kelompok.index', ['kelompok' => $peminjam_id]);
     }
 }

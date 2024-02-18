@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Peminjam;
 use Illuminate\Http\Request;
 
 class AngsuranKelompokController extends Controller
@@ -12,6 +13,15 @@ class AngsuranKelompokController extends Controller
     public function index()
     {
         //
+    }
+
+    public function daftarPeminjam()
+    {
+        $kelompoks = Peminjam::where('jenis_peminjam', 1)->get();
+        return view('dashboard.admin.angsuran-kelompok.peminjam', [
+            'title' => 'Peminjam Kelompok',
+            'kelompoks' => $kelompoks
+        ]);
     }
 
     /**

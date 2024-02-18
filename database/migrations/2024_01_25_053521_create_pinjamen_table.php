@@ -26,7 +26,7 @@ return new class extends Migration
             $table->dateTime('tgl_pelunasan')->nullable();
             $table->dateTime('tgl_jatuh_tempo')->nullable();
             $table->string('keperluan');
-            $table->unsignedBigInteger('keterangan')->comment('0: Belum Lunas; 1: Lunas');
+            $table->unsignedBigInteger('keterangan')->comment('0: Belum Lunas; 1: Lunas {if total_pokok_dibayarkan >= jumlah_pinjaman then lunas}');
             $table->timestamps();
         });
     }

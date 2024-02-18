@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title') @lang('Detail Pinjaman Kelompok - BUMDes Bangun Mulyo') @endsection
+@section('title') @lang('Detail Pinjaman Perorangan - BUMDes Bangun Mulyo') @endsection
 @section('css')
     <link href="{{ URL::asset('assets/libs/jsvectormap/jsvectormap.min.css')}}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('assets/libs/swiper/swiper.min.css')}}" rel="stylesheet" type="text/css" />
@@ -14,16 +14,16 @@
             SI BUMDes Bangun Mulyo
         @endslot
         @slot('li_2')
-            Data Peminjam Kelompok
+            Data Peminjam Perorangan
         @endslot
         @slot('li_2_link')
-            {{ route('peminjam-kelompok.index') }}
+            {{ route('peminjam-single.index') }}
         @endslot
         @slot('li_3')
-            Detail Kelompok {{ $kelompok_name }}
+            Detail Peminjam {{ $single_name }}
         @endslot
         @slot('li_3_link')
-            {{ route('detail-kelompok.index', ['kelompok' => $kelompok]) }}
+            {{ route('detail-single.index', ['single' => $single]) }}
         @endslot
         @slot('title')
             {{ $title }}
@@ -36,10 +36,10 @@
                 <div class="row">
                     <div class="col-lg-12">
                         {{-- @include('dashboard.admin.pinjaman-anggota.modals.create') --}}
-                        @include('dashboard.admin.pinjaman.modals.edit-full')
+                        @include('dashboard.admin.pinjaman-single.modals.edit-full')
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
-                                <h3 class="card-title mb-0 flex-grow-1">Detail Pinjaman Kelompok {{ $kelompok_name }} Periode Ke - {{ $periode }}</h3>
+                                <h3 class="card-title mb-0 flex-grow-1">Detail Pinjaman {{ $single_name }} Periode Ke - {{ $periode }}</h3>
                                 <div class="flex-shrink-0">
                                     <div>
                                         <button type="button" class="btn btn-primary btn-sm shadow-none"  data-bs-toggle="modal" data-bs-target="#editFullDataPinjaman">
@@ -67,7 +67,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-medium">
-                                                        Nilai Peminjaman
+                                                        Nilai Pinjaman
                                                     </td>
                                                     <td> : </td>
                                                     <td>
@@ -180,7 +180,7 @@
 
         </div> <!-- end col -->
     </div>
-    <div class="row">
+    {{-- <div class="row">
         <div class="col">
             <div class="h-100">
                 <!--end row-->
@@ -271,7 +271,7 @@
             </div> <!-- end .h-100-->
 
         </div> <!-- end col -->
-    </div>
+    </div> --}}
 
 @endsection
 @section('script')

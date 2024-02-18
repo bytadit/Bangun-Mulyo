@@ -40,7 +40,7 @@ class PeminjamKelompokController extends Controller
             'nama_dusun' => $request->nama_dusun,
             'jenis_peminjam' => 1
         ]);
-        Alert::success('Sukses!', 'Data Peminjam Kelompok ditambahkan!');
+        Alert::success('Sukses!', 'Data Peminjam Kelompok berhasil ditambahkan!');
         return redirect()->route('peminjam-kelompok.index');
     }
 

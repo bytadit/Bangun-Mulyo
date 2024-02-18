@@ -15,7 +15,7 @@
 @section('content')
     @component('components.breadcrumb')
         @slot('li_1') Buku Tamu @endslot
-        @slot('title') Surat Masuk @endslot     
+        @slot('title') Surat Masuk @endslot
     @endcomponent
     <div class="row">
         <div class="col">
@@ -28,7 +28,7 @@
                                 <h4 class="fs-16 mb-1">Selamat Datang di UPT TIK!</h4>
                                 <p class="text-muted mb-0">Berikut adalah data surat masuk ke UPT TIK UNS!</p>
                             </div>
-                            <button type="button" class="btn btn-success btn-lg btn-label waves-effect waves-light mx-2 " data-bs-toggle="modal" data-bs-target="#createData">
+                            <button type="button" class="btn btn-primary btn-lg btn-label waves-effect waves-light mx-2 " data-bs-toggle="modal" data-bs-target="#createData">
                                 <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
                                 Tambah Data
                             </button>

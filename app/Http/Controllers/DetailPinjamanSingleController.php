@@ -2,26 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Peminjam;
 use Illuminate\Http\Request;
 
-class AngsuranSingleController extends Controller
+class DetailPinjamanSingleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-    }
-
-    public function daftarPeminjam()
-    {
-        $singles = Peminjam::where('jenis_peminjam', 2)->get();
-        return view('dashboard.admin.angsuran-single.peminjam', [
-            'title' => 'Peminjam Perorangan',
-            'singles' => $singles
-        ]);
+        
     }
 
     /**

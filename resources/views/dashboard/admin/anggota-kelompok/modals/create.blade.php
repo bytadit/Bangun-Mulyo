@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" enctype="multipart/form-data" action="{{ route('detail.store', ['kelompok' => $kelompok]) }}">
+                <form method="post" enctype="multipart/form-data" action="{{ route('detail-kelompok.store', ['kelompok' => $kelompok]) }}">
                     @csrf
                     <div class="row g-3">
                         <input type="hidden" name="peminjam_id" value="{{ $kelompok }}">

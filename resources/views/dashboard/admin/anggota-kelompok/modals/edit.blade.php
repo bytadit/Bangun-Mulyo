@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" enctype="multipart/form-data" action="{{ route('detail.update', ['kelompok' => $kelompok, 'detail' => $anggota->id]) }}">
+                <form method="post" enctype="multipart/form-data" action="{{ route('detail-kelompok.update', ['kelompok' => $kelompok, 'detail_kelompok' => $anggota->id]) }}">
                     @csrf
                     @method('put')
                     <div class="row g-3">

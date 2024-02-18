@@ -27,7 +27,7 @@
 {{--                            <button class="btn btn-lg btn-soft-success float-end">--}}
 {{--                                <i class="ri-user-add-line"></i> <span >@lang('Tambah Tamu')</span>--}}
 {{--                            </button><!-- end card header -->--}}
-                            <button type="button" class="btn btn-success btn-lg btn-label waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#createData">
+                            <button type="button" class="btn btn-primary btn-lg btn-label waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#createData">
                                 <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
                                 Tambah Data
                             </button>

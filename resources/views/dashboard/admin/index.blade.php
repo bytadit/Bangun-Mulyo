@@ -26,7 +26,7 @@
                                 <h4 class="fs-16 mb-1">Selamat Datang !</h4>
                                 {{-- <p class="text-muted mb-0">Silakan mengisi buku tamu berikut yaa!</p> --}}
                             </div>
-                            {{-- <button type="button" class="btn btn-success btn-lg btn-label waves-effect waves-light mx-2" data-bs-toggle="modal" data-bs-target="#createData">
+                            {{-- <button type="button" class="btn btn-primary btn-lg btn-label waves-effect waves-light mx-2" data-bs-toggle="modal" data-bs-target="#createData">
                                 <i class="ri-user-add-line label-icon align-middle fs-16 me-2"></i>
                                 Tambah Data
                             </button>

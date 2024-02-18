@@ -23,7 +23,7 @@
                                 <h4 class="fs-16 mb-1">Selamat Datang di SI BUMDes Bangun Mulyo!</h4>
                                 <p class="text-muted mb-0">Berikut adalah peminjam perorangan di BUMDes Bangun Mulyo!</p>
                             </div>
-                            <button type="button" class="btn btn-success btn-lg btn-label waves-effect waves-light mx-2" data-bs-toggle="modal" data-bs-target="#createDataInventaris">
+                            <button type="button" class="btn btn-primary btn-lg btn-label waves-effect waves-light mx-2" data-bs-toggle="modal" data-bs-target="#createDataPeminjamSingle">
                                 <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
                                 Tambah Data
                             </button>
@@ -40,7 +40,7 @@
                                 <h1 class="mb-0">Peminjam Perorangan</h1>
                             </div>
                             <div class="card-body">
-                                <table id="alternative-pagination" class="table nowrap dt-responsive align-middle table-hover table-bordered" style="width:100%">
+                                <table id="scroll-horizontal" class="table nowrap align-middle table-hover table-bordered" style="width:100%">
                                     <thead>
                                     <tr>
                                         <th>No.</th>
@@ -67,12 +67,22 @@
                                             <td>
                                                 {{$single->nama_dusun}}
                                             </td>
+                                            {{-- <td>
+                                                <div class="d-flex align-items-center fw-medium">
+                                                    <a class="btn btn-sm btn-soft-success mr-1" href="#">
+                                                        <i class="ri-file-text-fill"></i> <span >@lang('Cetak Proposal')</span>
+                                                    </a>
+                                                </div>
+                                            </td> --}}
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editData{{$single->id}}">
+                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('detail-single.index', ['single' => $single->id]) }}">
+                                                        <i class="ri-group-2-fill"></i> <span >@lang('Detail Peminjam')</span>
+                                                    </a>
+                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataPeminjamSingle{{$single->id}}">
                                                         <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
                                                     </button>
-                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteData{{$single->id}}">
+                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataPeminjamSingle{{$single->id}}">
                                                         <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
                                                     </button>
                                                 </div>

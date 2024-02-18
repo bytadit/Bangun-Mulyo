@@ -43,7 +43,7 @@ class PinjamanController extends Controller
             'keterangan' => $request->keterangan,
         ]);
         Alert::success('Sukses!', 'Data Pinjaman Kelompok berhasil diatur!');
-        return redirect()->route('detail.index', ['kelompok' => $peminjam_id]);
+        return redirect()->route('detail-kelompok.index', ['kelompok' => $peminjam_id]);
     }
 
     /**
@@ -81,7 +81,7 @@ class PinjamanController extends Controller
                 'keterangan' => $request->eketerangan,
             ]);
         Alert::success('Sukses!', 'Data pinjaman kelompok berhasil diubah!');
-        return redirect()->route('detail.index', ['kelompok' => $peminjam_id]);
+        return redirect()->route('detail-kelompok.index', ['kelompok' => $peminjam_id]);
     }
 
     /**
@@ -93,6 +93,6 @@ class PinjamanController extends Controller
         $peminjam_id = $request->peminjam_id;
         Pinjaman::destroy($pinjaman_id);
         Alert::success('Sukses!', 'Data pinjaman kelompok berhasil dihapus!');
-        return redirect()->route('detail.index', ['kelompok' => $peminjam_id]);
+        return redirect()->route('detail-kelompok.index', ['kelompok' => $peminjam_id]);
     }
 }

@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body text-center p-5">
-                <form method="post" enctype="multipart/form-data" action="{{ route('detail.destroy', ['kelompok' => $kelompok, 'detail' => $anggota->id]) }}">
+                <form method="post" enctype="multipart/form-data" action="{{ route('detail-kelompok.destroy', ['kelompok' => $kelompok, 'detail_kelompok' => $anggota->id]) }}">
                     @csrf
                     @method('delete')
                     <input type="hidden" name="peminjam_id" value="{{$kelompok}}">

@@ -23,7 +23,7 @@
             Detail Kelompok {{ $kelompok_name }}
         @endslot
         @slot('li_3_link')
-            {{ route('detail.index', ['kelompok' => $kelompok]) }}
+            {{ route('detail-kelompok.index', ['kelompok' => $kelompok]) }}
         @endslot
         @slot('title')
             {{ $title }}
@@ -35,7 +35,7 @@
                 {{-- <div class="row mb-3 pb-1">
                     <div class="col-12">
                         <div class="d-flex align-items-lg-center flex-lg-row flex-column float-end">
-                            <button type="button" class="btn btn-success btn-lg btn-label waves-effect waves-light mx-2" data-bs-toggle="modal" data-bs-target="#createDataPeminjamKelompok">
+                            <button type="button" class="btn btn-primary btn-lg btn-label waves-effect waves-light mx-2" data-bs-toggle="modal" data-bs-target="#createDataPeminjamKelompok">
                                 <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
                                 Tambah Anggota
                             </button>
@@ -57,12 +57,12 @@
                                 <div class="flex-shrink-0">
                                     <div>
                                         @if($pinjaman_anggota->count() == 0)
-                                            <button type="button" class="btn btn-success btn-sm shadow-none"  data-bs-toggle="modal" data-bs-target="#createDataPinjamanAnggota">
+                                            <button type="button" class="btn btn-primary btn-sm shadow-none"  data-bs-toggle="modal" data-bs-target="#createDataPinjamanAnggota">
                                                 <i class="ri-pencil-line"></i>
                                                 Atur Data
                                             </button>
                                         @elseif($pinjaman_anggota->count() > 0)
-                                            <button type="button" class="btn btn-success btn-sm shadow-none"  data-bs-toggle="modal" data-bs-target="#editDataPinjamanAnggota">
+                                            <button type="button" class="btn btn-primary btn-sm shadow-none"  data-bs-toggle="modal" data-bs-target="#editDataPinjamanAnggota">
                                                 <i class="ri-pencil-line"></i>
                                                 Ubah Data
                                             </button>

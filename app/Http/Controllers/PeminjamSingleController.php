@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Peminjam;
 use Illuminate\Http\Request;
+use Alert;
 
 class PeminjamSingleController extends Controller
 {
@@ -32,7 +33,15 @@ class PeminjamSingleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = Peminjam::create([
+            'nama' => $request->nama,
+            'alamat' => $request->alamat,
+            'noHP' => $request->no_hp,
+            'nama_dusun' => $request->nama_dusun,
+            'jenis_peminjam' => 2
+        ]);
+        Alert::success('Sukses!', 'Data Peminjam Perorangan berhasil ditambahkan!');
+        return redirect()->route('peminjam-single.index');
     }
 
     /**
@@ -56,14 +65,27 @@ class PeminjamSingleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $peminjam_id = $request->peminjam_id;
+        Peminjam::where('id', $peminjam_id)
+            ->update([
+                'nama' => $request->enama,
+                'alamat' => $request->ealamat,
+                'noHP' => $request->eno_hp,
+                'nama_dusun' => $request->enama_dusun,
+                'jenis_peminjam' => $request->ejenis_peminjam
+            ]);
+        Alert::success('Sukses!', 'Data peminjam perorangan berhasil diubah!');
+        return redirect()->route('peminjam-single.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        $peminjam_id = $request->peminjam_id;
+        Peminjam::destroy($peminjam_id);
+        Alert::success('Sukses!', 'Data peminjam perorangan berhasil dihapus!');
+        return redirect()->route('peminjam-single.index');
     }
 }

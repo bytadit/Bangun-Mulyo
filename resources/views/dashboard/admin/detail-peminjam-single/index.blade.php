@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title') @lang('Data Peminjam Kelompok - BUMDes Bangun Mulyo') @endsection
+@section('title') @lang('Data Peminjam Perorangan - BUMDes Bangun Mulyo') @endsection
 @section('css')
     <link href="{{ URL::asset('assets/libs/jsvectormap/jsvectormap.min.css')}}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('assets/libs/swiper/swiper.min.css')}}" rel="stylesheet" type="text/css" />
@@ -14,10 +14,10 @@
             SI BUMDes Bangun Mulyo
         @endslot
         @slot('li_2')
-            Data Peminjam Kelompok
+            Data Peminjam Perorangan
         @endslot
         @slot('li_2_link')
-            {{ route('peminjam-kelompok.index') }}
+            {{ route('peminjam-single.index') }}
         @endslot
         @slot('title')
             {{ $title }}
@@ -26,17 +26,17 @@
     <div class="row">
         <div class="col">
             <div class="h-100">
-                {{-- @include('dashboard.admin.anggota-kelompok.modals.create') --}}
+                @include('dashboard.admin.detail-peminjam-single.modals.create')
                 <div class="row">
                     <div class="col-lg-12">
-                        @include('dashboard.admin.pinjaman.modals.create')
-                        @include('dashboard.admin.anggota-kelompok.modals.edit-kelompok')
+                        {{-- @include('dashboard.admin.pinjaman.modals.create') --}}
+                        @include('dashboard.admin.detail-peminjam-single.modals.edit-single')
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
-                                <h3 class="card-title mb-0 flex-grow-1">Informasi Kelompok {{ $kelompok_name }}</h3>
+                                <h3 class="card-title mb-0 flex-grow-1">Informasi Peminjam {{ $single_name }}</h3>
                                 <div class="flex-shrink-0">
                                     <div>
-                                        <button type="button" class="btn btn-primary btn-sm shadow-none"  data-bs-toggle="modal" data-bs-target="#editDataKelompok">
+                                        <button type="button" class="btn btn-primary btn-sm shadow-none"  data-bs-toggle="modal" data-bs-target="#editDataSingle">
                                             <i class="ri-pencil-line"></i>
                                             Ubah Data
                                         </button>
@@ -50,11 +50,11 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="fw-medium">
-                                                        Nama Kelompok
+                                                        Nama Peminjam
                                                     </td>
                                                     <td> : </td>
                                                     <td>
-                                                        <h6 class="fs-15 mb-1">{{ $kelompoks->first()->nama }}</h6>
+                                                        <h6 class="fs-15 mb-1">{{ $singles->first()->nama }}</h6>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -63,7 +63,7 @@
                                                     </td>
                                                     <td> : </td>
                                                     <td>
-                                                        <h6 class="fs-15 mb-1">{{ $kelompoks->first()->noHP }}</h6>
+                                                        <h6 class="fs-15 mb-1">{{ $singles->first()->noHP }}</h6>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -72,7 +72,7 @@
                                                     </td>
                                                     <td> : </td>
                                                     <td>
-                                                        <h6 class="fs-15 mb-1">{{ $kelompoks->first()->nama_dusun }}</h6>
+                                                        <h6 class="fs-15 mb-1">{{ $singles->first()->nama_dusun }}</h6>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -81,7 +81,7 @@
                                                     </td>
                                                     <td> : </td>
                                                     <td>
-                                                        <h6 class="fs-15 mb-1">{{ $kelompoks->first()->alamat }}</h6>
+                                                        <h6 class="fs-15 mb-1">{{ $singles->first()->alamat }}</h6>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -185,107 +185,15 @@
         <div class="col">
             <div class="h-100">
                 <!--end row-->
-                @include('dashboard.admin.anggota-kelompok.modals.create')
+                @include('dashboard.admin.pinjaman-single.modals.create')
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
-                                <h3 class="card-title mb-0 flex-grow-1">Daftar Anggota Kelompok {{ $kelompok_name }}</h3>
+                                <h3 class="card-title mb-0 flex-grow-1">Riwayat Pinjaman {{ $single_name }}</h3>
                                 <div class="flex-shrink-0">
                                     <div>
-                                        <button type="button" class="btn btn-primary btn-sm shadow-none" data-bs-toggle="modal" data-bs-target="#createDataAnggotaKelompok">
-                                            <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
-                                            Tambah Anggota
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <table id="scroll-horizontal" class="table nowrap align-middle table-hover table-bordered" style="width:100%">
-                                    <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>NIK</th>
-                                        <th>Nama Anggota</th>
-                                        <th>Jabatan</th>
-                                        <th>Jenis Kelamin</th>
-                                        <th>Usia</th>
-                                        <th>No HP</th>
-                                        <th>Pekerjaan</th>
-                                        <th>Alamat</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($anggotas as $anggota)
-                                        <tr>
-                                            <td>{{$loop->iteration}}</td>
-                                            <td>
-                                                {{$anggota->nik}}
-                                            </td>
-                                            <td>
-                                                {{$anggota->nama}}
-                                            </td>
-                                            <td>
-                                                {{$anggota->jabatan->nama_jabatan}}
-                                            </td>
-                                            <td>
-                                                {{$anggota->jenis_kelamin == 1 ? 'Laki-laki' : 'Perempuan'}}
-                                            </td>
-                                            <td>
-                                                {{ \Carbon\Carbon::parse($anggota->tgl_lahir)->diffInYears(\Carbon\Carbon::now())}} Tahun
-                                            </td>
-                                            <td>
-                                                {{$anggota->noHP}}
-                                            </td>
-                                            <td>
-                                                {{$anggota->pekerjaan}}
-                                            </td>
-                                            <td>
-                                                {{$anggota->alamat}}
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center fw-medium">
-                                                    {{-- <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('pinjaman-anggota.index', ['kelompok' => $kelompok, 'anggota' => $anggota->id]) }}">
-                                                        <i class="ri-group-2-fill"></i> <span >@lang('Detail Pinjaman')</span>
-                                                    </a> --}}
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataAnggotaKelompok{{$anggota->id}}">
-                                                        <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataAnggotaKelompok{{$anggota->id}}">
-                                                        <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        @include('dashboard.admin.anggota-kelompok.modals.edit')
-                                        @include('dashboard.admin.anggota-kelompok.modals.delete')
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end col-->
-                </div>
-            </div> <!-- end .h-100-->
-
-        </div> <!-- end col -->
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="h-100">
-                <!--end row-->
-
-                @include('dashboard.admin.pinjaman.modals.create')
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-header align-items-center d-flex">
-                                <h3 class="card-title mb-0 flex-grow-1">Riwayat Pinjaman Kelompok {{ $kelompok_name }}</h3>
-                                <div class="flex-shrink-0">
-                                    <div>
-                                        <button type="button" class="btn btn-primary btn-sm shadow-none" data-bs-toggle="modal" data-bs-target="#createDataPinjaman">
+                                        <button type="button" class="btn btn-primary btn-sm shadow-none" data-bs-toggle="modal" data-bs-target="#createDataPinjamanSingle">
                                             <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
                                             Tambah Data
                                         </button>
@@ -330,20 +238,20 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('pinjaman-kelompok.show', ['kelompok' => $kelompok, 'pinjaman_kelompok' => $pinjaman->id]) }}">
+                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('pinjaman-single.show', ['single' => $single, 'pinjaman_single' => $pinjaman->id]) }}">
                                                         <i class="ri-group-2-fill"></i> <span >@lang('Detail Pinjaman')</span>
                                                     </a>
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataPinjaman{{$pinjaman->id}}">
+                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataPinjamanSingle{{$pinjaman->id}}">
                                                         <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
                                                     </button>
-                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataPinjaman{{$pinjaman->id}}">
+                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataPinjamanSingle{{$pinjaman->id}}">
                                                         <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
                                                     </button>
                                                 </div>
                                             </td>
                                         </tr>
-                                        @include('dashboard.admin.pinjaman.modals.edit')
-                                        @include('dashboard.admin.pinjaman.modals.delete')
+                                        @include('dashboard.admin.pinjaman-single.modals.edit')
+                                        @include('dashboard.admin.pinjaman-single.modals.delete')
                                     @endforeach
                                     </tbody>
                                 </table>

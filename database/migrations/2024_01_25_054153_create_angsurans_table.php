@@ -16,15 +16,16 @@ return new class extends Migration
             $table->unsignedBigInteger('pinjaman_id');
             $table->foreign('pinjaman_id')->references('id')->on('pinjaman')->onDelete('cascade');
             $table->dateTime('tgl_angsuran');
-            $table->float('iuran');
-            $table->integer('pokok_dibayar');
-            $table->integer('angsuran_pokok');
-            $table->integer('pokok_tunggakan');
-            // $table->integer('pokok_sisa');
-            $table->integer('simpanan');
-            $table->integer('total_simpanan');
+            $table->float('iuran')->comment('nilai iuran/jasa per bulan')->nullable();
+            $table->integer('pokok')->comment('nilai pokok per bulan')->nullable();
+            $table->integer('angsuran_dibayarkan')->comment('nilai yang dibayarkan')->nullable();
+            $table->integer('simpanan')->comment('nilai simpanan saat membayar')->nullable();
+            $table->integer('total_pokok_dibayarkan')->comment('total pokok yang selama ini dibayarkan')->nullable();
+            $table->integer('total_iuran_dibayarkan')->comment('total iuran yang selama ini dibayarkan')->nullable();
+            $table->integer('pokok_tunggakan')->comment('jumlah_pinjaman - total_pokok_dibayarkan')->nullable();
+            $table->integer('iuran_tunggakan')->comment('(nilai iuran/jasa per bulan * bulan berjalan sejak pinjaman) - total_iuran_dibayarkan')->nullable();
+            $table->integer('total_simpanan')->comment('total simpanan yang selama ini mengendap')->nullable();
             $table->string('keterangan');
-            // $table->integer('jasa/bulan');
             $table->timestamps();
         });
     }

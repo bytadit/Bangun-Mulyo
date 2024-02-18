@@ -23,7 +23,7 @@
                                 <h4 class="fs-16 mb-1">Selamat Datang di SI BUMDes Bangun Mulyo!</h4>
                                 <p class="text-muted mb-0">Berikut adalah peminjam kelompok di BUMDes Bangun Mulyo!</p>
                             </div>
-                            <button type="button" class="btn btn-success btn-lg btn-label waves-effect waves-light mx-2" data-bs-toggle="modal" data-bs-target="#createDataPeminjamKelompok">
+                            <button type="button" class="btn btn-primary btn-lg btn-label waves-effect waves-light mx-2" data-bs-toggle="modal" data-bs-target="#createDataPeminjamKelompok">
                                 <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
                                 Tambah Data
                             </button>
@@ -76,7 +76,7 @@
                                             </td> --}}
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('detail.index', ['kelompok' => $kelompok->id]) }}">
+                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('detail-kelompok.index', ['kelompok' => $kelompok->id]) }}">
                                                         <i class="ri-group-2-fill"></i> <span >@lang('Detail Kelompok')</span>
                                                     </a>
                                                     <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editData{{$kelompok->id}}">

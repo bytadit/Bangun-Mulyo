@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title') @lang('Data Pejabat - BUMDes Bangun Mulyo') @endsection
+@section('title') @lang('Data Peminjam Perorangan - BUMDes Bangun Mulyo') @endsection
 @section('css')
     <link href="{{ URL::asset('assets/libs/jsvectormap/jsvectormap.min.css')}}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('assets/libs/swiper/swiper.min.css')}}" rel="stylesheet" type="text/css" />
@@ -11,7 +11,7 @@
 @section('content')
     @component('components.breadcrumb')
         @slot('li_1') SI BUMDes Bangun Mulyo @endslot
-        @slot('title') Daftar Pejabat BUMDes @endslot
+        @slot('title') Data Peminjam Perorangan @endslot
     @endcomponent
     <div class="row">
         <div class="col">
@@ -21,57 +21,59 @@
                         <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                             <div class="flex-grow-1">
                                 <h4 class="fs-16 mb-1">Selamat Datang di SI BUMDes Bangun Mulyo!</h4>
-                                <p class="text-muted mb-0">Berikut adalah daftar daftar pejabat di BUMDes Bangun Mulyo!</p>
+                                <p class="text-muted mb-0">Berikut adalah daftar peminjam perorangan di BUMDes Bangun Mulyo!</p>
                             </div>
-                            <button type="button" class="btn btn-primary btn-lg btn-label waves-effect waves-light mx-2" data-bs-toggle="modal" data-bs-target="#createDataPejabat">
-                                <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
-                                Tambah Data
-                            </button>
                         </div>
                     </div>
                     <!--end col-->
                 </div>
                 <!--end row-->
-                @include('dashboard.admin.pejabat.modals.create')
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header text-center">
-                                <h1 class="mb-0">Daftar Pejabat</h1>
+                                <h1 class="mb-0">Peminjam Perorangan</h1>
                             </div>
                             <div class="card-body">
-                                <table id="alternative-pagination" class="table nowrap dt-responsive align-middle table-hover table-bordered" style="width:100%">
+                                <table id="scroll-horizontal" class="table nowrap align-middle table-hover table-bordered" style="width:100%">
                                     <thead>
                                     <tr>
                                         <th>No.</th>
-                                        <th>Nama Staff</th>
-                                        <th>Nama Pejabat</th>
+                                        <th>Nama Peminjam</th>
+                                        <th>No HP</th>
+                                        <th>Dusun</th>
+                                        <th>Alamat</th>
                                         <th>Aksi</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($pejabats as $pejabat)
+                                    @foreach($singles as $single)
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
                                             <td>
-                                                {{$pejabat->user->name}}
+                                                {{$single->nama}}
                                             </td>
                                             <td>
-                                                {{$pejabat->jabatan->nama_jabatan}}
+                                                {{$single->noHP}}
+                                            </td>
+                                            <td>
+                                                {{$single->nama_dusun}}
+                                            </td>
+                                            <td>
+                                                {{$single->alamat}}
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editData{{$pejabat->id}}">
-                                                        <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteData{{$pejabat->id}}">
-                                                        <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
+                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('detail-kelompok.index', ['kelompok' => $single->id]) }}">
+                                                        <i class="ri-group-2-fill"></i> <span >@lang('Riwayat Pinjaman')</span>
+                                                    </a>
+                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editData{{$single->id}}">
+                                                        <i class="ri-eye-line"></i> <span >@lang('Informasi Peminjam')</span>
                                                     </button>
                                                 </div>
                                             </td>
                                         </tr>
-                                        @include('dashboard.admin.pejabat.modals.edit')
-                                        @include('dashboard.admin.pejabat.modals.delete')
+                                        @include('dashboard.admin.angsuran-single.modals.info-single')
                                     @endforeach
                                     </tbody>
                                 </table>

@@ -85,7 +85,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link menu-link fw-medium {{ Request::routeIs('peminjam-single.index') ? 'active fw-bold' : '' }}"
+                                <a class="nav-link menu-link fw-medium {{ Request::routeIs('peminjam-single.index') || Request::is('peminjam-single/*') ? 'active fw-bold' : '' }}"
                                     href="{{ route('peminjam-single.index') }}" role="button" aria-expanded="false"
                                     aria-controls="sidebarApps">
                                     <i class="ri-user-search-fill"></i> <span>@lang('Perorangan')</span>
@@ -99,18 +99,18 @@
                         aria-expanded="false" aria-controls="menuAngsuran">
                         <i class="ri-money-dollar-circle-line"></i> <span>Angsuran</span>
                     </a>
-                    <div class="collapse menu-dropdown {{ Request::routeIs('angsuran-single.index') || Request::routeIs('angsuran-kelompok.index') ? 'show' : '' }}" id="menuAngsuran">
+                    <div class="collapse menu-dropdown {{ Request::routeIs('angsuran-kelompok.daftar-peminjam') || Request::routeIs('angsuran-single.daftar-peminjam') ? 'show' : '' }}" id="menuAngsuran">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a class="nav-link menu-link fw-medium {{ Request::routeIs('angsuran-kelompok.index') ? 'active fw-bold' : '' }}"
-                                    href="" role="button" aria-expanded="false"
+                                <a class="nav-link menu-link fw-medium {{ Request::routeIs('angsuran-kelompok.daftar-peminjam') || Request::is('angsuran-kelompok/*') ? 'active fw-bold' : '' }}"
+                                    href="{{ route('angsuran-kelompok.daftar-peminjam') }}" role="button" aria-expanded="false"
                                     aria-controls="sidebarApps">
                                     <i class="ri-team-line"></i> <span>@lang('Kelompok')</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link menu-link fw-medium {{ Request::routeIs('angsuran-single.index') ? 'active fw-bold' : '' }}"
-                                    href="{{ route('angsuran-single.index') }}" role="button" aria-expanded="false"
+                                <a class="nav-link menu-link fw-medium {{ Request::routeIs('angsuran-single.daftar-peminjam') || Request::is('angsuran-single/*') ? 'active fw-bold' : '' }}"
+                                    href="{{ route('angsuran-single.daftar-peminjam') }}" role="button" aria-expanded="false"
                                     aria-controls="sidebarApps">
                                     <i class="ri-user-search-line"></i> <span>@lang('Perorangan')</span>
                                 </a>
