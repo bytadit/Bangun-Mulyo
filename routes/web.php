@@ -38,6 +38,8 @@ Route::get('/', function (){
 });
 Route::get('/angsuran-kelompok', [AngsuranKelompokController::class, 'daftarPeminjam'])->name('angsuran-kelompok.daftar-peminjam');
 Route::get('/angsuran-single', [AngsuranSingleController::class, 'daftarPeminjam'])->name('angsuran-single.daftar-peminjam');
+Route::get('/angsuran-kelompok/{kelompok}/pinjaman-kelompok', [AngsuranKelompokController::class, 'daftarPinjaman'])->name('angsuran-kelompok.daftar-pinjaman');
+Route::get('/angsuran-single/{single}/pinjaman-single', [AngsuranSingleController::class, 'daftarPinjaman'])->name('angsuran-single.daftar-pinjaman');
 
 Route::put('/peminjam-kelompok/{kelompok}/pinjaman-kelompok/{pinjaman_kelompok}/update-full', [PinjamanKelompokController::class, 'updateFull'])->name('pinjaman-kelompok.update-full');
 Route::put('/peminjam-single/{single}/pinjaman-single/{pinjaman_single}/update-full', [PinjamanSingleController::class, 'updateFull'])->name('pinjaman-single.update-full');

@@ -64,10 +64,10 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('detail-kelompok.index', ['kelompok' => $kelompok->id]) }}">
+                                                    <a class="btn btn-sm btn-primary mr-1" href="{{ route('angsuran-kelompok.daftar-pinjaman', ['kelompok' => $kelompok->id]) }}">
                                                         <i class="ri-group-2-fill"></i> <span >@lang('Riwayat Pinjaman')</span>
                                                     </a>
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editData{{$kelompok->id}}">
+                                                    <button class="btn btn-sm btn-info mx-1"  data-bs-toggle="modal" data-bs-target="#showInfoKelompok{{$kelompok->id}}">
                                                         <i class="ri-eye-line"></i> <span >@lang('Informasi Kelompok')</span>
                                                     </button>
                                                 </div>

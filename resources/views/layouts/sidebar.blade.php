@@ -99,7 +99,7 @@
                         aria-expanded="false" aria-controls="menuAngsuran">
                         <i class="ri-money-dollar-circle-line"></i> <span>Angsuran</span>
                     </a>
-                    <div class="collapse menu-dropdown {{ Request::routeIs('angsuran-kelompok.daftar-peminjam') || Request::routeIs('angsuran-single.daftar-peminjam') ? 'show' : '' }}" id="menuAngsuran">
+                    <div class="collapse menu-dropdown {{ Request::routeIs('angsuran-kelompok.daftar-peminjam') || Request::routeIs('angsuran-single.daftar-peminjam') || Request::is('angsuran-kelompok/*') || Request::is('angsuran-single/*') ? 'show' : '' }}" id="menuAngsuran">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link menu-link fw-medium {{ Request::routeIs('angsuran-kelompok.daftar-peminjam') || Request::is('angsuran-kelompok/*') ? 'active fw-bold' : '' }}"
