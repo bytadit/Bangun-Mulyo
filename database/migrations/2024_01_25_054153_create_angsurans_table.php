@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('pokok_tunggakan')->comment('jumlah_pinjaman - total_pokok_dibayarkan')->nullable();
             $table->integer('iuran_tunggakan')->comment('(nilai iuran/jasa per bulan * bulan berjalan sejak pinjaman) - total_iuran_dibayarkan')->nullable();
             $table->integer('total_simpanan')->comment('total simpanan yang selama ini mengendap')->nullable();
-            $table->string('keterangan');
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }
