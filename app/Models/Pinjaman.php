@@ -13,6 +13,7 @@ class Pinjaman extends Model
     use HasFactory;
     protected $guarded = ['id'];
     protected $table = 'pinjaman';
+    protected $dates = ['tgl_pinjaman', 'tgl_jatuh_tempo', 'created_at', 'updated_at'];
     public function peminjam(): BelongsTo
     {
         return $this->belongsTo(Peminjam::class, 'peminjam_id');

@@ -191,7 +191,7 @@
         <div class="col">
             <div class="h-100">
                 <!--end row-->
-                {{-- @include('dashboard.admin.angsuran-single.modals.create') --}}
+                @include('dashboard.admin.angsuran-single.modals.create')
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
@@ -199,7 +199,7 @@
                                 <h3 class="card-title mb-0 flex-grow-1">Riwayat Angsuran {{ $single_name }} Periode ke - {{ $periode }}</h3>
                                 <div class="flex-shrink-0">
                                     <div>
-                                        <button type="button" class="btn btn-primary btn-sm shadow-none" data-bs-toggle="modal" data-bs-target="#createDataAngsuransingle">
+                                        <button type="button" class="btn btn-primary btn-sm shadow-none" data-bs-toggle="modal" data-bs-target="#createDataAngsuranSingle">
                                             <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
                                             Tambah Data
                                         </button>
@@ -215,7 +215,7 @@
                                         <th>Iuran</th>
                                         <th>Pokok</th>
                                         <th>Angsuran</th>
-                                        <th>Simpanan</th>
+                                        {{-- <th>Simpanan</th> --}}
                                         <th>Keterangan</th>
                                         <th>Dokumen</th>
                                         <th>Aksi</th>
@@ -237,9 +237,9 @@
                                             <td>
                                                 @currency($angsuran->angsuran_dibayarkan)
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 @currency($angsuran->simpanan)
-                                            </td>
+                                            </td> --}}
                                             <td>
                                                 {{ $angsuran->keterangan }}
                                             </td>
@@ -252,10 +252,10 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataAngsuransingle{{$angsuran->id}}">
+                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataAngsuranSingle{{$angsuran->id}}">
                                                         <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
                                                     </button>
-                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataAngsuransingle{{$angsuran->id}}">
+                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataAngsuranSingle{{$angsuran->id}}">
                                                         <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
                                                     </button>
                                                 </div>
