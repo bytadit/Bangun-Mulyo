@@ -187,8 +187,24 @@ class AngsuranKelompokController extends Controller
             // }
         }
         $data->save();
-
-        Alert::success('Sukses!', 'Data Riwayat Iuran Kelompok berhasil ditambahkan!');
+        $jml_pinjaman = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_pinjaman;
+        if($data->total_pokok_dibayarkan >=  $jml_pinjaman){
+            $sisa = $data->total_pokok_dibayarkan - $jml_pinjaman;
+            Pinjaman::where('id', $pinjaman_id)->update([
+                'keterangan' => 1,
+                'tgl_pelunasan' => $data->tgl_angsuran
+            ]);
+            Angsuran::where('id', $data->id)->update([
+                'total_simpanan' => $data->total_simpanan + $sisa,
+                'simpanan' => $sisa
+            ]);
+        }else{
+            Pinjaman::where('id', $pinjaman_id)->update([
+                'keterangan' => 0,
+                'tgl_pelunasan' => null
+            ]);
+        }
+        Alert::success('Sukses!', 'Data Riwayat Angsuran Kelompok berhasil ditambahkan!');
         return redirect()->route('riwayat-angsuran-kelompok.index', ['kelompok' => $kelompok_id, 'pinjaman_kelompok' => $pinjaman_id]);
     }
 
@@ -213,7 +229,136 @@ class AngsuranKelompokController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $kelompok_id = $request->kelompok_id;
+        $pinjaman_id = $request->pinjaman_id;
+        $angsuran_id = $request->angsuran_id;
+        $nilai_angsuran = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_angsuran;
+        $nilai_pinjaman = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_pinjaman;
+        $nilai_iuran = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_iuran;
+        $nilai_pokok = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_pokok;
+
+        $tgl_pinjaman = Pinjaman::where('id', $pinjaman_id)->first()->tgl_pinjaman;
+        $total_pokok = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('pokok');
+        $total_iuran = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('iuran');
+        $total_simpanan = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('simpanan');
+
+        $data = Angsuran::find($angsuran_id);
+        $data->pinjaman_id = $pinjaman_id;
+        $data->tgl_angsuran = $request->etgl_angsuran;
+        $data->angsuran_dibayarkan = $request->eangsuran_dibayarkan;
+        $data->keterangan = $request->eketerangan;
+        $data->iuran_tunggakan = 0;
+
+        if(Angsuran::where('pinjaman_id', $pinjaman_id)->count() == 0){
+            if(Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran)) <= 1){
+                $data->iuran = $nilai_iuran;
+                $data->total_iuran_dibayarkan = $nilai_iuran;
+                if($request->eangsuran_dibayarkan >= $nilai_angsuran){
+                    $data->pokok = $nilai_pokok;
+                    $data->simpanan = $request->eangsuran_dibayarkan - $nilai_angsuran;
+                    $data->total_pokok_dibayarkan = $nilai_pokok;
+                    $data->total_simpanan = $request->eangsuran_dibayarkan - $nilai_angsuran;
+                    $data->pokok_tunggakan = $nilai_pinjaman - $nilai_pokok;
+                }else{
+                    $data->pokok = $request->eangsuran_dibayarkan - $nilai_iuran;
+                    $data->simpanan = 0;
+                    $data->total_pokok_dibayarkan = $request->eangsuran_dibayarkan - $nilai_iuran;
+                    $data->total_simpanan = 0;
+                    $data->pokok_tunggakan = $nilai_pinjaman - ($request->eangsuran_dibayarkan - $nilai_iuran);
+                }
+            }elseif(Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran)) > 1){
+                $rentang = Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran));
+                $data->iuran = $nilai_iuran * $rentang;
+                $data->total_iuran_dibayarkan = $nilai_iuran * $rentang;
+                if($request->eangsuran_dibayarkan >= ($nilai_angsuran + $nilai_iuran * ($rentang - 1))){
+                    $data->pokok = $nilai_pokok;
+                    $data->simpanan = $request->eangsuran_dibayarkan - ($nilai_angsuran + $nilai_iuran * ($rentang - 1));
+                    $data->total_pokok_dibayarkan = $nilai_pokok;
+                    $data->total_simpanan = $request->eangsuran_dibayarkan - ($nilai_angsuran + $nilai_iuran * ($rentang - 1));
+                    $data->pokok_tunggakan = $nilai_pinjaman - $nilai_pokok;
+                }else{
+                    $data->pokok = $request->eangsuran_dibayarkan - ($nilai_iuran * $rentang);
+                    $data->simpanan = 0;
+                    $data->total_pokok_dibayarkan = $request->eangsuran_dibayarkan - $nilai_iuran * $rentang;
+                    $data->total_simpanan = 0;
+                    $data->pokok_tunggakan = $nilai_pinjaman - ($request->eangsuran_dibayarkan - ($nilai_iuran * $rentang));
+                }
+            }
+        }elseif(Angsuran::where('pinjaman_id', $pinjaman_id)->count() > 0){
+            $angsuran_terakhir = Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->created_at;
+            if(Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran)) <= 1){
+                $data->iuran = 0;
+                $data->total_iuran_dibayarkan = $nilai_iuran;
+                if($request->eangsuran_dibayarkan >= $nilai_angsuran){
+                    $data->pokok = $nilai_pokok;
+                    $data->simpanan = $request->eangsuran_dibayarkan - $nilai_pokok;
+                    $data->total_pokok_dibayarkan = $total_pokok + $nilai_pokok;
+                    $data->total_simpanan = $total_simpanan + $request->eangsuran_dibayarkan - $nilai_pokok;
+                    $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $nilai_pokok);
+                }else{
+                    $data->pokok = $request->eangsuran_dibayarkan;
+                    $data->simpanan = 0;
+                    $data->total_pokok_dibayarkan = $total_pokok + $request->eangsuran_dibayarkan;
+                    $data->total_simpanan = $total_simpanan;
+                    $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $request->eangsuran_dibayarkan);
+                }
+            }elseif(Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran)) > 1){
+                $rentang = Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran));
+                $rentang_akhir = Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($angsuran_terakhir));
+                $data->iuran = $nilai_iuran * ($rentang - $rentang_akhir);
+                $data->total_iuran_dibayarkan = $nilai_iuran * ($rentang - $rentang_akhir);
+                if($request->eangsuran_dibayarkan >= ($nilai_angsuran + $nilai_iuran * ($rentang - $rentang_akhir - 1))){
+                    $data->pokok = $nilai_pokok;
+                    $data->simpanan = $request->eangsuran_dibayarkan - ($nilai_angsuran + $nilai_iuran * ($rentang - $rentang_akhir - 1));
+                    $data->total_pokok_dibayarkan = $nilai_pokok;
+                    $data->total_simpanan = $request->eangsuran_dibayarkan - ($nilai_angsuran + $nilai_iuran * ($rentang - $rentang_akhir - 1));
+                    $data->pokok_tunggakan = $nilai_pinjaman - $nilai_pokok;
+                }else{
+                    $data->pokok = $request->eangsuran_dibayarkan - ($nilai_iuran * ($rentang - $rentang_akhir));
+                    $data->simpanan = 0;
+                    $data->total_pokok_dibayarkan = $request->eangsuran_dibayarkan - $nilai_iuran * ($rentang - $rentang_akhir);
+                    $data->total_simpanan = 0;
+                    $data->pokok_tunggakan = $nilai_pinjaman - ($request->eangsuran_dibayarkan - ($nilai_iuran * ($rentang - $rentang_akhir)));
+                }
+            }
+
+            // $angsuran_terakhir = Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->created_at;
+            // $data->iuran = $nilai_iuran * (Carbon::parse($angsuran_terakhir)->diffInMonths(Carbon::parse($request->tgl_angsuran)));
+            // $data->total_iuran_dibayarkan = $nilai_iuran * (Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->tgl_angsuran)));
+            // if($request->angsuran_dibayarkan >= $nilai_angsuran){
+            //     $data->pokok = $nilai_pokok;
+            //     $data->simpanan = $request->angsuran_dibayarkan - $nilai_angsuran;
+            //     $data->total_pokok_dibayarkan = $total_pokok + $nilai_pokok;
+            //     $data->total_simpanan = $total_simpanan + ($request->angsuran_dibayarkan - $nilai_angsuran);
+            //     $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $nilai_pokok);
+            // }else{
+            //     $data->pokok = $request->angsuran_dibayarkan - ($nilai_iuran * (Carbon::parse($angsuran_terakhir)->diffInMonths(Carbon::parse($request->tgl_angsuran))));
+            //     $data->simpanan = 0;
+            //     $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - ($nilai_iuran * (Carbon::parse($angsuran_terakhir)->diffInMonths(Carbon::parse($request->tgl_angsuran)))));
+            //     $data->total_simpanan = $total_simpanan;
+            //     $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $request->angsuran_dibayarkan - ($nilai_iuran * (Carbon::parse($angsuran_terakhir)->diffInMonths(Carbon::parse($request->tgl_angsuran)))));
+            // }
+        }
+        $data->save();
+        $jml_pinjaman = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_pinjaman;
+        if($data->total_pokok_dibayarkan >=  $jml_pinjaman){
+            $sisa = $data->total_pokok_dibayarkan - $jml_pinjaman;
+            Pinjaman::where('id', $pinjaman_id)->update([
+                'keterangan' => 1,
+                'tgl_pelunasan' => $data->tgl_angsuran
+            ]);
+            Angsuran::where('id', $data->id)->update([
+                'total_simpanan' => $data->total_simpanan + $sisa,
+                'simpanan' => $sisa
+            ]);
+        }else{
+            Pinjaman::where('id', $pinjaman_id)->update([
+                'keterangan' => 0,
+                'tgl_pelunasan' => null
+            ]);
+        }
+        Alert::success('Sukses!', 'Data Riwayat Angsuran Kelompok berhasil diubah!');
+        return redirect()->route('riwayat-angsuran-kelompok.index', ['kelompok' => $kelompok_id, 'pinjaman_kelompok' => $pinjaman_id]);
     }
 
     /**
@@ -224,7 +369,21 @@ class AngsuranKelompokController extends Controller
         $kelompok_id = $request->kelompok_id;
         $pinjaman_id = $request->pinjaman_id;
         $angsuran_id = $request->angsuran_id;
+
+        $jml_pinjaman = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_pinjaman;
         Angsuran::destroy($angsuran_id);
+        if(Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->total_pokok_dibayarkan >=  $jml_pinjaman){
+            $sisa = Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->total_pokok_dibayarkan - $jml_pinjaman;
+            Pinjaman::where('id', $pinjaman_id)->update([
+                'keterangan' => 1,
+                'tgl_pelunasan' => Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->tgl_angsuran
+            ]);
+        }else{
+            Pinjaman::where('id', $pinjaman_id)->update([
+                'keterangan' => 0,
+                'tgl_pelunasan' => null
+            ]);
+        }
         Alert::success('Sukses!', 'Data angsuran berhasil dihapus!');
         return redirect()->route('riwayat-angsuran-kelompok.index', ['kelompok' => $kelompok_id, 'pinjaman_kelompok' => $pinjaman_id]);
     }

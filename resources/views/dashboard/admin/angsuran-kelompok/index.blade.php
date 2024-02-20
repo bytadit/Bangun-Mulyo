@@ -261,7 +261,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        {{-- @include('dashboard.admin.angsuran-kelompok.modals.edit') --}}
+                                        @include('dashboard.admin.angsuran-kelompok.modals.edit')
                                         @include('dashboard.admin.angsuran-kelompok.modals.delete')
                                     @endforeach
                                     </tbody>
