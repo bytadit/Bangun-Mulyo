@@ -10,6 +10,7 @@ class Angsuran extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+    protected $dates = ['created_at', 'updated_at', 'tgl_angsuran'];
     public function pinjaman(): BelongsTo
     {
         return $this->belongsTo(Pinjaman::class, 'pinjaman_id');

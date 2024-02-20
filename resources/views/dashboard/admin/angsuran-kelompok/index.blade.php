@@ -63,6 +63,15 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-medium">
+                                                        Tanggal Pelunasan
+                                                    </td>
+                                                    <td> : </td>
+                                                    <td>
+                                                        <h6 class="fs-15 mb-1">{{ $pinjaman->first()->tgl_pelunasan == null ? 'Belum Diatur' : date('d-m-Y', strtotime($pinjaman->first()->tgl_pelunasan)) }}</h6>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-medium">
                                                         Jangka Waktu
                                                     </td>
                                                     <td> : </td>
@@ -77,6 +86,24 @@
                                                     <td> : </td>
                                                     <td>
                                                         <h6 class="fs-15 mb-1">@currency($pinjaman->first()->jumlah_pinjaman)</h6>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-medium">
+                                                        Nilai Angsuran
+                                                    </td>
+                                                    <td> : </td>
+                                                    <td>
+                                                        <h6 class="fs-15 mb-1">@currency($pinjaman->first()->jumlah_angsuran)</h6>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-medium">
+                                                        Nilai Pokok
+                                                    </td>
+                                                    <td> : </td>
+                                                    <td>
+                                                        <h6 class="fs-15 mb-1">@currency($pinjaman->first()->jumlah_pokok)</h6>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -115,7 +142,7 @@
                                                         <h6 class="fs-15 mb-1">@currency($pinjaman->first()->jumlah_pinjaman - $angsurans->sum('pokok'))</h6>
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                {{-- <tr>
                                                     <td class="fw-medium">
                                                         Tunggakan Iuran
                                                     </td>
@@ -129,7 +156,7 @@
                                                             @endif
                                                         </h6>
                                                     </td>
-                                                </tr>
+                                                </tr> --}}
                                                 <tr>
                                                     <td class="fw-medium">
                                                         Total Simpanan
@@ -219,7 +246,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
                                                     <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('pinjaman-kelompok.show', ['kelompok' => $kelompok, 'pinjaman_kelompok' => $angsuran->id]) }}">
-                                                        <i class="ri-group-2-fill"></i> <span >@lang('Detail Pinjaman')</span>
+                                                        <i class="ri-group-2-fill"></i> <span >@lang('Cetak Kuitansi')</span>
                                                     </a>
                                                 </div>
                                             </td>
@@ -234,8 +261,8 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        {{-- @include('dashboard.admin.angsuran-kelompok.modals.edit')
-                                        @include('dashboard.admin.angsuran-kelompok.modals.delete') --}}
+                                        {{-- @include('dashboard.admin.angsuran-kelompok.modals.edit') --}}
+                                        @include('dashboard.admin.angsuran-kelompok.modals.delete')
                                     @endforeach
                                     </tbody>
                                 </table>
