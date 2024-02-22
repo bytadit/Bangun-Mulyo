@@ -148,40 +148,26 @@ class AngsuranSingleController extends Controller
                     $data->tgl_jatuh_tempo = $jatuhTempoBulanIni;
                     if ($tanggalAngsuranBaru >= $jatuhTempoBulanIni) {
                         // Tarik iuran sesuai dengan selisih bulan
-                        $data->iuran = $nilai_iuran * $perbedaanBulan;
-                        $data->total_iuran_dibayarkan = $nilai_iuran * $perbedaanBulan;
+                        $iuran = $nilai_pinjaman * (1 - (1.013)**($perbedaanBulan));
+                        $data->iuran = $iuran;
+                        $data->total_iuran_dibayarkan = $iuran;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        if($request->angsuran_dibayarkan >= ($nilai_pokok + ($nilai_iuran * $perbedaanBulan))){
-                            $data->pokok = $nilai_pokok;
-                            $data->simpanan = $request->angsuran_dibayarkan - ($nilai_pokok + ($nilai_iuran * $perbedaanBulan));
-                            $data->total_pokok_dibayarkan = $nilai_pokok;
-                            $data->total_simpanan = $request->angsuran_dibayarkan - ($nilai_pokok + ($nilai_iuran * $perbedaanBulan)); // karena belum ada data sebelumnya
-                            $data->pokok_tunggakan = $nilai_pinjaman - $nilai_pokok;
-                        } elseif($request->angsuran_dibayarkan < ($nilai_pokok + ($nilai_iuran * $perbedaanBulan))){
-                            $data->pokok = $request->angsuran_dibayarkan - ($nilai_iuran * $perbedaanBulan);
-                            $data->simpanan = 0;
-                            $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan - ($nilai_iuran * $perbedaanBulan);
-                            $data->total_simpanan = 0;
-                            $data->pokok_tunggakan = $nilai_pinjaman - ($request->angsuran_dibayarkan - ($nilai_iuran * $perbedaanBulan));
-                        }
+                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan - $iuran;
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($request->angsuran_dibayarkan - $iuran);
                     } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
                         // Cukup bayar iuran di bulan sebelumnya
-                        $data->iuran = $nilai_iuran * ($perbedaanBulan - 1);
-                        $data->total_iuran_dibayarkan = $nilai_iuran * ($perbedaanBulan - 1);
-                            // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        if($request->angsuran_dibayarkan >= ($nilai_pokok + ($nilai_iuran * ($perbedaanBulan - 1)))){
-                            $data->pokok = $nilai_pokok;
-                            $data->simpanan = $request->angsuran_dibayarkan - ($nilai_pokok + ($nilai_iuran * ($perbedaanBulan - 1)));
-                            $data->total_pokok_dibayarkan = $nilai_pokok;
-                            $data->total_simpanan = $request->angsuran_dibayarkan - ($nilai_pokok + ($nilai_iuran * ($perbedaanBulan - 1))); // karena belum ada data sebelumnya
-                            $data->pokok_tunggakan = $nilai_pinjaman - $nilai_pokok;
-                        } elseif($request->angsuran_dibayarkan < ($nilai_pokok + ($nilai_iuran * ($perbedaanBulan - 1)))){
-                            $data->pokok = $request->angsuran_dibayarkan - ($nilai_iuran * ($perbedaanBulan - 1));
-                            $data->simpanan = 0;
-                            $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan - ($nilai_iuran * ($perbedaanBulan - 1));
-                            $data->total_simpanan = 0;
-                            $data->pokok_tunggakan = $nilai_pinjaman - ($request->angsuran_dibayarkan - ($nilai_iuran * ($perbedaanBulan - 1)));
-                        }
+                        $iuran = $nilai_pinjaman * (1 - (1.013)**($perbedaanBulan - 1));
+                        $data->iuran = $iuran;
+                        $data->total_iuran_dibayarkan = $iuran;
+                        // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
+                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan - $iuran;
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($request->angsuran_dibayarkan - $iuran);
                     }
                 }
             }
@@ -199,19 +185,11 @@ class AngsuranSingleController extends Controller
                 $data->iuran = 0;
                 $data->total_iuran_dibayarkan = $total_iuran + 0;
                 // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                if($request->angsuran_dibayarkan >= $nilai_pokok){
-                    $data->pokok = $nilai_pokok;
-                    $data->simpanan = $request->angsuran_dibayarkan - $nilai_pokok;
-                    $data->total_pokok_dibayarkan = $total_pokok + $nilai_pokok;
-                    $data->total_simpanan = $total_simpanan + ($request->angsuran_dibayarkan - $nilai_pokok); // karena belum ada data sebelumnya
-                    $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $nilai_pokok);
-                } elseif($request->angsuran_dibayarkan < $nilai_pokok){
-                    $data->pokok = $request->angsuran_dibayarkan - ($nilai_iuran * 0);
-                    $data->simpanan = $total_simpanan + 0;
-                    $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - ($nilai_iuran * 0));
-                    $data->total_simpanan = $total_simpanan + 0;
-                    $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - ($nilai_iuran * 0)));
-                }
+                $data->pokok = $request->angsuran_dibayarkan;
+                $data->simpanan = 0;
+                $data->total_pokok_dibayarkan = $total_pokok + $request->angsuran_dibayarkan;
+                $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $request->angsuran_dibayarkan);
             }elseif($bulanTahunAngsuranTerakhir != $bulanTahunAngsuranBaru){
                 $perbedaanBulan = $bulanTahunAngsuranTerakhir->diffInMonths($bulanTahunAngsuranBaru);
                 $perbedaanBulanPinjaman = $bulanTahunPeminjaman->diffInMonths($bulanTahunAngsuranBaru);
@@ -220,40 +198,25 @@ class AngsuranSingleController extends Controller
                     $jatuhTempoBulanIni = $tanggalPeminjaman->copy()->addMonths($perbedaanBulanPinjaman);
                     $data->tgl_jatuh_tempo = $jatuhTempoBulanIni;
                     if ($tanggalAngsuranBaru >= $jatuhTempoBulanIni) {
-                        $data->iuran = (1.3/100)*($nilai_pinjaman - $total_pokok);
-                        $data->total_iuran_dibayarkan = $total_iuran + ((1.3/100)*($nilai_pinjaman - $total_pokok));
+                        $iuran = (1.3/100)*($nilai_pinjaman - $total_pokok);
+                        $data->iuran = $iuran;
+                        $data->total_iuran_dibayarkan = $total_iuran + $iuran;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        if($request->angsuran_dibayarkan >= $nilai_angsuran){
-                            $data->pokok = $nilai_pokok;
-                            $data->simpanan = $request->angsuran_dibayarkan - $nilai_angsuran;
-                            $data->total_pokok_dibayarkan = $total_pokok + $nilai_pokok;
-                            $data->total_simpanan = $total_simpanan + ($request->angsuran_dibayarkan - $nilai_angsuran); // karena belum ada data sebelumnya
-                            $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $nilai_pokok);
-                        } elseif($request->angsuran_dibayarkan < $nilai_angsuran){
-                            $data->pokok = $request->angsuran_dibayarkan - ($nilai_iuran * 1);
-                            $data->simpanan = 0;
-                            $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - ($nilai_iuran * 1));
-                            $data->total_simpanan = $total_simpanan + 0;
-                            $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - ($nilai_iuran * 1)));
-                        }
+                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - $iuran);
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - $iuran));
                         // bermasalah disini
                     } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
                         $data->iuran = 0;
                         $data->total_iuran_dibayarkan = $total_iuran + 0;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        if($request->angsuran_dibayarkan >= $nilai_pokok){
-                            $data->pokok = $nilai_pokok;
-                            $data->simpanan = $request->angsuran_dibayarkan - $nilai_pokok;
-                            $data->total_pokok_dibayarkan = $total_pokok + $nilai_pokok;
-                            $data->total_simpanan = $total_simpanan + ($request->angsuran_dibayarkan - $nilai_pokok); // karena belum ada data sebelumnya
-                            $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $nilai_pokok);
-                        } elseif($request->angsuran_dibayarkan < $nilai_pokok){
-                            $data->pokok = $request->angsuran_dibayarkan - ($nilai_iuran * 0);
-                            $data->simpanan = 0;
-                            $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - ($nilai_iuran * 0));
-                            $data->total_simpanan = $total_simpanan + 0;
-                            $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - ($nilai_iuran * 0)));
-                        }
+                        $data->pokok = $request->angsuran_dibayarkan;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $total_pokok + $request->angsuran_dibayarkan;
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $request->angsuran_dibayarkan);
                     }
                 }elseif($perbedaanBulan > 1){
                     // Cek apakah tanggal angsuran yang akan diinputkan sudah melewati tanggal jatuh tempo di bulan tersebut
@@ -261,40 +224,25 @@ class AngsuranSingleController extends Controller
                     $data->tgl_jatuh_tempo = $jatuhTempoBulanIni;
                     if ($tanggalAngsuranBaru >= $jatuhTempoBulanIni) {
                         // Tarik iuran sesuai dengan selisih bulan
-                        $data->iuran = ((1.3/100)*($nilai_pinjaman - $total_pokok)) * $perbedaanBulan;
-                        $data->total_iuran_dibayarkan = $total_iuran + (((1.3/100)*($nilai_pinjaman - $total_pokok)) * $perbedaanBulan);
+                        $iuran = ($nilai_pinjaman - $total_pokok) * (1 - (1.013)**($perbedaanBulan));
+                        $data->iuran = $iuran;
+                        $data->total_iuran_dibayarkan = $total_iuran + $iuran;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        if($request->angsuran_dibayarkan >= ($nilai_pokok + (((1.3/100)*($nilai_pinjaman - $total_pokok)) * $perbedaanBulan))){
-                            $data->pokok = $nilai_pokok;
-                            $data->simpanan = $request->angsuran_dibayarkan - ($nilai_pokok + (((1.3/100)*($nilai_pinjaman - $total_pokok)) * $perbedaanBulan));
-                            $data->total_pokok_dibayarkan = $total_pokok + $nilai_pokok;
-                            $data->total_simpanan = $total_simpanan + ($request->angsuran_dibayarkan - ($nilai_pokok + (((1.3/100)*($nilai_pinjaman - $total_pokok)) * $perbedaanBulan))); // karena belum ada data sebelumnya
-                            $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $nilai_pokok);
-                        } elseif($request->angsuran_dibayarkan < ($nilai_pokok + (((1.3/100)*($nilai_pinjaman - $total_pokok)) * $perbedaanBulan))){
-                            $data->pokok = $request->angsuran_dibayarkan - (((1.3/100)*($nilai_pinjaman - $total_pokok)) * $perbedaanBulan);
-                            $data->simpanan = 0;
-                            $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - (((1.3/100)*($nilai_pinjaman - $total_pokok)) * $perbedaanBulan));
-                            $data->total_simpanan = $total_simpanan + 0;
-                            $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - (((1.3/100)*($nilai_pinjaman - $total_pokok)) * $perbedaanBulan)));
-                        }
+                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - $iuran);
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - $iuran));
                     } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
                         // Cukup bayar iuran di bulan sebelumnya
-                        $data->iuran = ((1.3/100)*($nilai_pinjaman - $total_pokok)) * ($perbedaanBulan - 1);
-                        $data->total_iuran_dibayarkan = $total_iuran + (((1.3/100)*($nilai_pinjaman - $total_pokok)) * ($perbedaanBulan - 1));
-                            // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        if($request->angsuran_dibayarkan >= ($nilai_pokok + (((1.3/100)*($nilai_pinjaman - $total_pokok)) * ($perbedaanBulan - 1)))){
-                            $data->pokok = $nilai_pokok;
-                            $data->simpanan = $request->angsuran_dibayarkan - ($nilai_pokok + (((1.3/100)*($nilai_pinjaman - $total_pokok)) * ($perbedaanBulan - 1)));
-                            $data->total_pokok_dibayarkan = $total_pokok + $nilai_pokok;
-                            $data->total_simpanan = $total_simpanan + ($request->angsuran_dibayarkan - ($nilai_pokok + (((1.3/100)*($nilai_pinjaman - $total_pokok)) * ($perbedaanBulan - 1)))); // karena belum ada data sebelumnya
-                            $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $nilai_pokok);
-                        } elseif($request->angsuran_dibayarkan < ($nilai_pokok + (((1.3/100)*($nilai_pinjaman - $total_pokok)) * ($perbedaanBulan - 1)))){
-                            $data->pokok = $request->angsuran_dibayarkan - (((1.3/100)*($nilai_pinjaman - $total_pokok)) * ($perbedaanBulan - 1));
-                            $data->simpanan = 0;
-                            $data->total_pokok_dibayarkan =  $total_pokok + ($request->angsuran_dibayarkan - (((1.3/100)*($nilai_pinjaman - $total_pokok)) * ($perbedaanBulan - 1)));
-                            $data->total_simpanan = $total_simpanan + 0;
-                            $data->pokok_tunggakan =  $nilai_pinjaman + ($total_pokok + ($request->angsuran_dibayarkan - (((1.3/100)*($nilai_pinjaman - $total_pokok)) * ($perbedaanBulan - 1))));
-                        }
+                        $iuran = ($nilai_pinjaman - $total_pokok) * (1 - (1.013)**($perbedaanBulan - 1));
+                        $data->iuran = $iuran;
+                        $data->total_iuran_dibayarkan = $total_iuran + $iuran;
+                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - $iuran);
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - $iuran));
                     }
                 }
             }
@@ -352,73 +300,189 @@ class AngsuranSingleController extends Controller
         $nilai_pokok = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_pokok;
 
         $tgl_pinjaman = Pinjaman::where('id', $pinjaman_id)->first()->tgl_pinjaman;
-        $total_pokok = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('pokok');
-        $total_iuran = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('iuran');
-        $total_simpanan = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('simpanan');
-
-        $iuran_now = Angsuran::where('id', $angsuran_id)->first()->iuran;
-        $pokok_now = Angsuran::where('id', $angsuran_id)->first()->pokok;
-        $simpanan_now = Angsuran::where('id', $angsuran_id)->first()->simpanan;
+        $tanggalPeminjaman = Carbon::parse($tgl_pinjaman);
+        $bulanTahunPeminjaman = Carbon::parse($tanggalPeminjaman->format('Y-m'));
+        $tanggalAngsuranBaru =  Carbon::parse($request->etgl_angsuran);
+        $bulanTahunAngsuranBaru = Carbon::parse($tanggalAngsuranBaru->format('Y-m'));
 
         $data = Angsuran::find($angsuran_id);
         $data->pinjaman_id = $pinjaman_id;
         $data->tgl_angsuran = $request->etgl_angsuran;
         $data->angsuran_dibayarkan = $request->eangsuran_dibayarkan;
         $data->keterangan = $request->eketerangan;
-        $data->iuran_tunggakan = 0;
 
         if(Angsuran::where('pinjaman_id', $pinjaman_id)->count() == 0 || $data->id == Angsuran::where('pinjaman_id', $pinjaman_id)->oldest()->first()->id){
-            if(Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran)) == 0){
-                $data->iuran = (1.3 / 100) * $nilai_pinjaman;
-                $data->total_iuran_dibayarkan = (1.3 / 100) * $nilai_pinjaman;
-                $data->pokok = $request->eangsuran_dibayarkan - ((1.3 / 100) * $nilai_pinjaman);
-                $data->simpanan = 0;
-                $data->total_pokok_dibayarkan = $request->eangsuran_dibayarkan - ((1.3 / 100) * $nilai_pinjaman);
-                $data->total_simpanan = 0;
-                $data->pokok_tunggakan = $nilai_pinjaman - $request->eangsuran_dibayarkan - ((1.3 / 100) * $nilai_pinjaman);
-            }elseif(Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran)) > 0){
-                $rentang = Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran));
-                $data->iuran = ((1.3 / 100) * $nilai_pinjaman) * $rentang;
-                $data->total_iuran_dibayarkan = ((1.3 / 100) * $nilai_pinjaman) * $rentang;
-                $data->pokok = $request->eangsuran_dibayarkan - ((1.3 / 100) * $nilai_pinjaman * $rentang);
-                $data->simpanan = 0;
-                $data->total_pokok_dibayarkan = $request->eangsuran_dibayarkan - ((1.3 / 100) * $nilai_pinjaman * $rentang);;
-                $data->total_simpanan = 0;
-                $data->pokok_tunggakan = $nilai_pinjaman - ($request->eangsuran_dibayarkan - ((1.3 / 100) * $nilai_pinjaman * $rentang));
-            }
-        }elseif(Angsuran::where('pinjaman_id', $pinjaman_id)->count() > 0 && $data->id != Angsuran::where('pinjaman_id', $pinjaman_id)->oldest()->first()->id){
-            $angsuran_terakhir = Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->tgl_angsuran;
-            if(Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran)) == 0){
+            // cek apakah antara tanggal pinjaman dan tanggal angsuran baru tidak ada perbedaan antara bulan dan tahun
+            // jika bulan dan tahun sama
+            if ($bulanTahunPeminjaman == $bulanTahunAngsuranBaru) {
+                $jatuhTempoBulanIni = $tanggalPeminjaman->copy()->addMonths(1);
+                $data->tgl_jatuh_tempo = $jatuhTempoBulanIni;
                 $data->iuran = 0;
-                $data->total_iuran_dibayarkan = $total_iuran - $iuran_now;
-                $data->pokok = $request->eangsuran_dibayarkan;
+                $data->total_iuran_dibayarkan = 0;
+                $data->pokok = $request->angsuran_dibayarkan;
                 $data->simpanan = 0;
-                $data->total_pokok_dibayarkan = $total_pokok - $pokok_now + $request->eangsuran_dibayarkan;
-                $data->total_simpanan = 0;
-                $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok - $pokok_now + $request->eangsuran_dibayarkan);
-            }elseif(Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran)) > 0){
-                $rentang = Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($request->etgl_angsuran));
-                $rentang_akhir = Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($angsuran_terakhir));
-                $data->iuran = ((1.3 / 100) * ($nilai_pinjaman - $total_pokok - $pokok_now)) * ($rentang - $rentang_akhir);
-                $data->total_iuran_dibayarkan = $total_iuran - $iuran_now + ((1.3 / 100) * ($nilai_pinjaman - $total_pokok - $pokok_now)) * ($rentang - $rentang_akhir);
-                $data->pokok = $request->eangsuran_dibayarkan - (((1.3 / 100) * ($nilai_pinjaman - $total_pokok - $pokok_now)) * ($rentang - $rentang_akhir));
-                $data->simpanan = 0;
-                $data->total_pokok_dibayarkan = $total_pokok - $pokok_now + ($request->eangsuran_dibayarkan - (((1.3 / 100) * ($nilai_pinjaman - $total_pokok - $pokok_now)) * ($rentang - $rentang_akhir)));
-                $data->total_simpanan = 0;
-                $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok - $pokok_now + ($request->eangsuran_dibayarkan - (((1.3 / 100) * ($nilai_pinjaman - $total_pokok - $pokok_now)) * ($rentang - $rentang_akhir))));
+                $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan;
+                $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                $data->pokok_tunggakan = $nilai_pinjaman - $request->angsuran_dibayarkan;
+                // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
+            }elseif($bulanTahunPeminjaman != $bulanTahunAngsuranBaru){
+                $perbedaanBulan = $bulanTahunPeminjaman->diffInMonths($bulanTahunAngsuranBaru);
+                if ($perbedaanBulan == 1) {
+                    // Cek apakah tanggal angsuran yang akan diinputkan sudah melewati tanggal jatuh tempo di bulan tersebut
+                    $jatuhTempoBulanIni = $tanggalPeminjaman->copy()->addMonths(1);
+                    $data->tgl_jatuh_tempo = $jatuhTempoBulanIni;
+                    if ($tanggalAngsuranBaru >= $jatuhTempoBulanIni) {
+                        $data->iuran = $nilai_iuran;
+                        $data->total_iuran_dibayarkan = $nilai_iuran;
+                        $data->pokok = $request->angsuran_dibayarkan - $nilai_iuran;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan - $nilai_iuran;
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($request->angsuran_dibayarkan - $nilai_iuran);
+                        // bermasalah disini
+                    } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
+                        $data->iuran = 0;
+                        $data->total_iuran_dibayarkan = 0;
+                        // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
+                        $data->pokok = $request->angsuran_dibayarkan;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan;
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - $request->angsuran_dibayarkan;
+                    }
+                }elseif($perbedaanBulan > 1){
+                    // Cek apakah tanggal angsuran yang akan diinputkan sudah melewati tanggal jatuh tempo di bulan tersebut
+                    $jatuhTempoBulanIni = $tanggalPeminjaman->copy()->addMonths($perbedaanBulan);
+                    $data->tgl_jatuh_tempo = $jatuhTempoBulanIni;
+                    if ($tanggalAngsuranBaru >= $jatuhTempoBulanIni) {
+                        // Tarik iuran sesuai dengan selisih bulan
+                        $iuran = $nilai_pinjaman * (1 - (1.013)**($perbedaanBulan));
+                        $data->iuran = $iuran;
+                        $data->total_iuran_dibayarkan = $iuran;
+                        // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
+                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan - $iuran;
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($request->angsuran_dibayarkan - $iuran);
+                    } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
+                        // Cukup bayar iuran di bulan sebelumnya
+                        $iuran = $nilai_pinjaman * (1 - (1.013)**($perbedaanBulan - 1));
+                        $data->iuran = $iuran;
+                        $data->total_iuran_dibayarkan = $iuran;
+                        // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
+                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan - $iuran;
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($request->angsuran_dibayarkan - $iuran);
+                    }
+                }
             }
         }
+        // if not a new input, there're some data
+        elseif(Angsuran::where('pinjaman_id', $pinjaman_id)->count() == 0 || $data->id == Angsuran::where('pinjaman_id', $pinjaman_id)->oldest()->first()->id){
+            $total_pokok = Angsuran::where('pinjaman_id', $pinjaman_id)
+                        ->where('id', '<', $data->id)
+                        ->orderBy('tgl_angsuran', 'DESC')
+                        ->sum('pokok');
+            $total_iuran = Angsuran::where('pinjaman_id', $pinjaman_id)
+                        ->where('id', '<', $data->id)
+                        ->orderBy('tgl_angsuran', 'DESC')
+                        ->sum('iuran');
+            $total_simpanan = Angsuran::where('pinjaman_id', $pinjaman_id)
+                        ->where('id', '<', $data->id)
+                        ->orderBy('tgl_angsuran', 'DESC')
+                        ->sum('simpanan');
+            $angsuranTerakhir = Angsuran::where('pinjaman_id', $pinjaman_id)
+                        ->where('id', '<', $data->id) // Exclude the updated record
+                        ->orderBy('tgl_angsuran', 'DESC')
+                        ->first()->tgl_angsuran;
+            $tanggalAngsuranTerakhir = Carbon::parse($angsuranTerakhir);
+            $bulanTahunAngsuranTerakhir = Carbon::parse($tanggalAngsuranTerakhir->format('Y-m'));
+            // jika bulan dan tahun sama
+            if ($bulanTahunAngsuranTerakhir == $bulanTahunAngsuranBaru) {
+                $perbedaanBulanPinjaman = $bulanTahunPeminjaman->diffInMonths($bulanTahunAngsuranBaru);
+                $jatuhTempoBulanIni = $tanggalPeminjaman->copy()->addMonths($perbedaanBulanPinjaman);
+                $data->tgl_jatuh_tempo = $jatuhTempoBulanIni;
+                $data->iuran = 0;
+                $data->total_iuran_dibayarkan = $total_iuran + 0;
+                // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
+                $data->pokok = $request->angsuran_dibayarkan;
+                $data->simpanan = 0;
+                $data->total_pokok_dibayarkan = $total_pokok + $request->angsuran_dibayarkan;
+                $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $request->angsuran_dibayarkan);
+            }elseif($bulanTahunAngsuranTerakhir != $bulanTahunAngsuranBaru){
+                $perbedaanBulan = $bulanTahunAngsuranTerakhir->diffInMonths($bulanTahunAngsuranBaru);
+                $perbedaanBulanPinjaman = $bulanTahunPeminjaman->diffInMonths($bulanTahunAngsuranBaru);
+                if ($perbedaanBulan == 1) {
+                    // Cek apakah tanggal angsuran yang akan diinputkan sudah melewati tanggal jatuh tempo di bulan tersebut
+                    $jatuhTempoBulanIni = $tanggalPeminjaman->copy()->addMonths($perbedaanBulanPinjaman);
+                    $data->tgl_jatuh_tempo = $jatuhTempoBulanIni;
+                    if ($tanggalAngsuranBaru >= $jatuhTempoBulanIni) {
+                        $iuran = (1.3/100)*($nilai_pinjaman - $total_pokok);
+                        $data->iuran = $iuran;
+                        $data->total_iuran_dibayarkan = $total_iuran + $iuran;
+                        // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
+                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - $iuran);
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - $iuran));
+                        // bermasalah disini
+                    } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
+                        $data->iuran = 0;
+                        $data->total_iuran_dibayarkan = $total_iuran + 0;
+                        // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
+                        $data->pokok = $request->angsuran_dibayarkan;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $total_pokok + $request->angsuran_dibayarkan;
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $request->angsuran_dibayarkan);
+                    }
+                }elseif($perbedaanBulan > 1){
+                    // Cek apakah tanggal angsuran yang akan diinputkan sudah melewati tanggal jatuh tempo di bulan tersebut
+                    $jatuhTempoBulanIni = $tanggalPeminjaman->copy()->addMonths($perbedaanBulanPinjaman);
+                    $data->tgl_jatuh_tempo = $jatuhTempoBulanIni;
+                    if ($tanggalAngsuranBaru >= $jatuhTempoBulanIni) {
+                        // Tarik iuran sesuai dengan selisih bulan
+                        $iuran = ($nilai_pinjaman - $total_pokok) * (1 - (1.013)**($perbedaanBulan));
+                        $data->iuran = $iuran;
+                        $data->total_iuran_dibayarkan = $total_iuran + $iuran;
+                        // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
+                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - $iuran);
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - $iuran));
+                    } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
+                        // Cukup bayar iuran di bulan sebelumnya
+                        $iuran = ($nilai_pinjaman - $total_pokok) * (1 - (1.013)**($perbedaanBulan - 1));
+                        $data->iuran = $iuran;
+                        $data->total_iuran_dibayarkan = $total_iuran + $iuran;
+                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->simpanan = 0;
+                        $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - $iuran);
+                        $data->total_simpanan = 0; // karena belum ada data sebelumnya
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - $iuran));
+                    }
+                }
+            }
+        }
+
         $data->save();
         $jml_pinjaman = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_pinjaman;
-        if ($data->total_pokok_dibayarkan >=  $jml_pinjaman) {
-            $sisa = $data->total_pokok_dibayarkan - $jml_pinjaman;
+        $total_now = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('pokok');
+        $last_data = Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first();
+        if ($total_now >= $jml_pinjaman) {
+            $sisa = $total_now - $jml_pinjaman;
             Pinjaman::where('id', $pinjaman_id)->update([
                 'keterangan' => 1,
-                'tgl_pelunasan' => $data->tgl_angsuran
+                'tgl_pelunasan' => $last_data->tgl_angsuran
             ]);
-            Angsuran::where('id', $data->id)->update([
-                'total_simpanan' => $data->total_simpanan + $sisa,
-                'simpanan' => $sisa
+            Angsuran::where('id', $last_data->id)->update([
+                'total_simpanan' => $last_data->total_simpanan + $sisa,
             ]);
         } else {
             Pinjaman::where('id', $pinjaman_id)->update([
@@ -441,14 +505,19 @@ class AngsuranSingleController extends Controller
 
         $jml_pinjaman = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_pinjaman;
         Angsuran::destroy($angsuran_id);
-        if(Angsuran::where('pinjaman_id')->count() > 0){
-            if(Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->total_pokok_dibayarkan >=  $jml_pinjaman){
-                $sisa = Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->total_pokok_dibayarkan - $jml_pinjaman;
+        $total_now = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('pokok');
+        $last_data = Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first();
+        if(Angsuran::where('pinjaman_id', $pinjaman_id)->count() > 0){
+            if ($total_now >=  $jml_pinjaman) {
+                $sisa = $total_now - $jml_pinjaman;
                 Pinjaman::where('id', $pinjaman_id)->update([
                     'keterangan' => 1,
-                    'tgl_pelunasan' => Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->tgl_angsuran
+                    'tgl_pelunasan' => $last_data->tgl_angsuran
                 ]);
-            }else{
+                Angsuran::where('id', $last_data->id)->update([
+                    'total_simpanan' => $last_data->total_simpanan + $sisa,
+                ]);
+            } else {
                 Pinjaman::where('id', $pinjaman_id)->update([
                     'keterangan' => 0,
                     'tgl_pelunasan' => null

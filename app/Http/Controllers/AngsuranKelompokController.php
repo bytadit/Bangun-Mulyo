@@ -377,19 +377,13 @@ class AngsuranKelompokController extends Controller
         $nilai_pokok = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_pokok;
 
         $tgl_pinjaman = Pinjaman::where('id', $pinjaman_id)->first()->tgl_pinjaman;
-        $total_pokok = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('pokok');
-        $total_iuran = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('iuran');
-        $total_simpanan = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('simpanan');
+
 
         // tanggal
         $tanggalPeminjaman = Carbon::parse($tgl_pinjaman);
         $bulanTahunPeminjaman = Carbon::parse($tanggalPeminjaman->format('Y-m'));
         $tanggalAngsuranBaru =  Carbon::parse($request->etgl_angsuran);
         $bulanTahunAngsuranBaru = Carbon::parse($tanggalAngsuranBaru->format('Y-m'));
-
-        $iuran_now = Angsuran::where('id', $angsuran_id)->first()->iuran;
-        $pokok_now = Angsuran::where('id', $angsuran_id)->first()->pokok;
-        $simpanan_now = Angsuran::where('id', $angsuran_id)->first()->simpanan;
 
         $data = Angsuran::find($angsuran_id);
         $data->pinjaman_id = $pinjaman_id;
@@ -508,6 +502,18 @@ class AngsuranKelompokController extends Controller
         // if not a new input, there're some data
         elseif(Angsuran::where('pinjaman_id', $pinjaman_id)->count() > 0 && $data->id != Angsuran::where('pinjaman_id', $pinjaman_id)->oldest()->first()->id){
             // $angsuranTerakhir = Angsuran::where('pinjaman_id', $pinjaman_id)->orderBy('tgl_angsuran', 'DESC')->first()->tgl_angsuran;
+            $total_pokok = Angsuran::where('pinjaman_id', $pinjaman_id)
+                                ->where('id', '<', $data->id)
+                                ->orderBy('tgl_angsuran', 'DESC')
+                                ->sum('pokok');
+            $total_iuran = Angsuran::where('pinjaman_id', $pinjaman_id)
+                                ->where('id', '<', $data->id)
+                                ->orderBy('tgl_angsuran', 'DESC')
+                                ->sum('iuran');
+            $total_simpanan = Angsuran::where('pinjaman_id', $pinjaman_id)
+                                ->where('id', '<', $data->id)
+                                ->orderBy('tgl_angsuran', 'DESC')
+                                ->sum('simpanan');
             $angsuranTerakhir = Angsuran::where('pinjaman_id', $pinjaman_id)
                                 ->where('id', '<', $data->id) // Exclude the updated record
                                 ->orderBy('tgl_angsuran', 'DESC')
@@ -700,15 +706,16 @@ class AngsuranKelompokController extends Controller
 
         $data->save();
         $jml_pinjaman = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_pinjaman;
-        if ($data->total_pokok_dibayarkan >=  $jml_pinjaman) {
-            $sisa = $data->total_pokok_dibayarkan - $jml_pinjaman;
+        $total_now = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('pokok');
+        $last_data = Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first();
+        if ($total_now >= $jml_pinjaman) {
+            $sisa = $total_now - $jml_pinjaman;
             Pinjaman::where('id', $pinjaman_id)->update([
                 'keterangan' => 1,
-                'tgl_pelunasan' => $data->tgl_angsuran
+                'tgl_pelunasan' => $last_data->tgl_angsuran
             ]);
-            Angsuran::where('id', $data->id)->update([
-                'total_simpanan' => $data->total_simpanan + $sisa,
-                'simpanan' => $sisa
+            Angsuran::where('id', $last_data->id)->update([
+                'total_simpanan' => $last_data->total_simpanan + $sisa,
             ]);
         } else {
             Pinjaman::where('id', $pinjaman_id)->update([
@@ -732,12 +739,17 @@ class AngsuranKelompokController extends Controller
 
         $jml_pinjaman = Pinjaman::where('id', $pinjaman_id)->first()->jumlah_pinjaman;
         Angsuran::destroy($angsuran_id);
-        if(Angsuran::where('pinjaman_id')->count() > 0){
-            if (Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->total_pokok_dibayarkan >=  $jml_pinjaman) {
-                $sisa = Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->total_pokok_dibayarkan - $jml_pinjaman;
+        $total_now = Angsuran::where('pinjaman_id', $pinjaman_id)->sum('pokok');
+        $last_data = Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first();
+        if(Angsuran::where('pinjaman_id', $pinjaman_id)->count() > 0){
+            if ($total_now >=  $jml_pinjaman) {
+                $sisa = $total_now - $jml_pinjaman;
                 Pinjaman::where('id', $pinjaman_id)->update([
                     'keterangan' => 1,
-                    'tgl_pelunasan' => Angsuran::where('pinjaman_id', $pinjaman_id)->latest()->first()->tgl_angsuran
+                    'tgl_pelunasan' => $last_data->tgl_angsuran
+                ]);
+                Angsuran::where('id', $last_data->id)->update([
+                    'total_simpanan' => $last_data->total_simpanan + $sisa,
                 ]);
             } else {
                 Pinjaman::where('id', $pinjaman_id)->update([
