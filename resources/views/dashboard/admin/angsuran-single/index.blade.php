@@ -52,7 +52,7 @@
                                                         <h6 class="fs-15 mb-1">{{ date('d-m-Y', strtotime($pinjaman->first()->tgl_pinjaman)) }}</h6>
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                {{-- <tr>
                                                     <td class="fw-medium">
                                                         Tanggal Jatuh Tempo
                                                     </td>
@@ -60,7 +60,7 @@
                                                     <td>
                                                         <h6 class="fs-15 mb-1">{{ date('d-m-Y', strtotime($pinjaman->first()->tgl_jatuh_tempo)) }}</h6>
                                                     </td>
-                                                </tr>
+                                                </tr> --}}
                                                 <tr>
                                                     <td class="fw-medium">
                                                         Tanggal Pelunasan
@@ -70,7 +70,7 @@
                                                         <h6 class="fs-15 mb-1">{{ $pinjaman->first()->tgl_pelunasan == null ? 'Belum Diatur' : date('d-m-Y', strtotime($pinjaman->first()->tgl_pelunasan)) }}</h6>
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                {{-- <tr>
                                                     <td class="fw-medium">
                                                         Jangka Waktu
                                                     </td>
@@ -78,7 +78,7 @@
                                                     <td>
                                                         <h6 class="fs-15 mb-1">{{ $pinjaman->first()->jangka_waktu }} Bulan</h6>
                                                     </td>
-                                                </tr>
+                                                </tr> --}}
                                                 <tr>
                                                     <td class="fw-medium">
                                                         Jumlah Pinjaman
@@ -212,6 +212,7 @@
                                     <tr>
                                         <th>No.</th>
                                         <th>Tanggal Angsuran</th>
+                                        <th>Tanggal Jatuh Tempo</th>
                                         <th>Iuran</th>
                                         <th>Pokok</th>
                                         <th>Angsuran</th>
@@ -227,6 +228,9 @@
                                             <td>{{$loop->iteration}}</td>
                                             <td>
                                                 {{ date('d-m-Y', strtotime($angsuran->tgl_angsuran)) }}
+                                            </td>
+                                            <td>
+                                                {{ date('d-m-Y', strtotime($angsuran->tgl_jatuh_tempo)) }}
                                             </td>
                                             <td>
                                                 @currency($angsuran->iuran)
