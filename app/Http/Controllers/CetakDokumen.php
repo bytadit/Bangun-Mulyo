@@ -14,6 +14,10 @@ use PhpOffice\PhpWord\IOFactory;
 use App\Models\User; // Adjust the namespace as per your application
 use Carbon\Carbon;
 use Riskihajar\Terbilang\Facades\Terbilang;
+use PhpOffice\PhpWord\Settings;
+
+Settings::setOutputEscapingEnabled(true);
+
 
 class CetakDokumen extends Controller
 {
@@ -56,13 +60,13 @@ class CetakDokumen extends Controller
         $tgl_angs = $tgl_angsuran->day;
         $kode_kelompok = $id_peminjam;
         $nama_kelompok = Peminjam::where('id', $id_peminjam)->first()->nama;
-        $jml_angsuran = Angsuran::where('id', $id_angsuran)->first()->angsuran_dibayarkan;
-        $terbilang = Terbilang::make($jml_angsuran);
+        $jml_angsuran = number_format(Angsuran::where('id', $id_angsuran)->first()->angsuran_dibayarkan, 2, ',', '.');
+        $terbilang = Terbilang::make(Angsuran::where('id', $id_angsuran)->first()->angsuran_dibayarkan);
         $orderedAngsuran = Angsuran::orderBy('tgl_angsuran')->pluck('id')->toArray();
         // Find the index of the desired ID in the array
         $urutan = array_search($id_angsuran, $orderedAngsuran) + 1;
-        $nilai_pokok =  Angsuran::where('id', $id_angsuran)->first()->pokok;
-        $nilai_iuran = Angsuran::where('id', $id_angsuran)->first()->iuran;
+        $nilai_pokok =  number_format(Angsuran::where('id', $id_angsuran)->first()->pokok, 2, ',', '.');
+        $nilai_iuran = number_format(Angsuran::where('id', $id_angsuran)->first()->iuran, 2, ',', '.');
         $nama_ketua = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->first()->nama;
         $nama_bendahara = PejabatBumdes::where('jabatan_id', 2)->first()->user->name;
         $tanggal_angsuran = $tgl_angsuran->format('d, F Y');
@@ -84,14 +88,14 @@ class CetakDokumen extends Controller
         $templateProcessor->setValue('urutan', $urutan);
         $templateProcessor->setValue('nilai_pokok', $nilai_pokok);
         $templateProcessor->setValue('nilai_iuran', $nilai_iuran);
-        $templateProcessor->setValue('tgl_angsuran', $tanggal_angsuran);
+        $templateProcessor->setValue('tgl_angsuran', Carbon::parse(Angsuran::where('id', $id_angsuran)->first()->tgl_angsuran)->isoFormat('D MMMM Y'));
         $templateProcessor->setValue('nama_ketua', $nama_ketua);
         $templateProcessor->setValue('nama_bendahara', $nama_bendahara);
         $templateProcessor->setValue('pokok_byr', $nilai_pokok);
         $templateProcessor->setValue('angs_bayar', $jml_angsuran);
         $templateProcessor->setValue('nilai_iuran', $nilai_iuran);
         $templateProcessor->setValue('sum_an', $urutan);
-        $templateProcessor->setValue('tgl_lunas', $tgl_lunas != null ? $tgl_lunas : 'Belum Lunas');
+        $templateProcessor->setValue('tgl_lunas', $tgl_lunas != null ? Carbon::parse(Angsuran::where('id', $id_angsuran)->first()->tgl_pelunasan)->isoFormat('D MMMM Y') : 'Belum Lunas');
 
         // Save the document to a temporary file
         $tempFile = tempnam(sys_get_temp_dir(), 'Kuitansi-SPP-'. $tgl_angsuran);
