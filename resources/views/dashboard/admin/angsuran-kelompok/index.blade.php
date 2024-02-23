@@ -249,9 +249,16 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('pinjaman-kelompok.show', ['kelompok' => $kelompok, 'pinjaman_kelompok' => $angsuran->id]) }}">
+                                                    <form action="{{ route('cetak.kuitansi-angsuran') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="id_peminjam" value="{{ $angsuran->pinjaman->peminjam->id }}">
+                                                        <input type="hidden" name="id_pinjaman" value="{{ $angsuran->pinjaman->id }}">
+                                                        <input type="hidden" name="id_angsuran" value="{{ $angsuran->id }}">
+                                                        <button type="submit" class="btn btn-sm btn-soft-primary mr-1"><i class="ri-group-2-fill"></i> <span >@lang('Cetak Kuitansi')</span></button>
+                                                    </form>
+                                                    {{-- <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('cetak.kuitansi-angsuran', ['kelompok' => $kelompok, 'pinjaman_kelompok' => $angsuran->id]) }}">
                                                         <i class="ri-group-2-fill"></i> <span >@lang('Cetak Kuitansi')</span>
-                                                    </a>
+                                                    </a> --}}
                                                 </div>
                                             </td>
                                             <td>

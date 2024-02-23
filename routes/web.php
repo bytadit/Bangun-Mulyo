@@ -4,6 +4,7 @@ use App\Http\Controllers\AnggotaKelompokController;
 use App\Http\Controllers\AngsuranController;
 use App\Http\Controllers\AngsuranKelompokController;
 use App\Http\Controllers\AngsuranSingleController;
+use App\Http\Controllers\CetakDokumen;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DetailSingleController;
 use App\Http\Controllers\InventarisController;
@@ -36,10 +37,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function (){
     return redirect('/beranda');
 });
+
 Route::get('/angsuran-kelompok', [AngsuranKelompokController::class, 'daftarPeminjam'])->name('angsuran-kelompok.daftar-peminjam');
 Route::get('/angsuran-single', [AngsuranSingleController::class, 'daftarPeminjam'])->name('angsuran-single.daftar-peminjam');
 Route::get('/angsuran-kelompok/{kelompok}/pinjaman-kelompok', [AngsuranKelompokController::class, 'daftarPinjaman'])->name('angsuran-kelompok.daftar-pinjaman');
 Route::get('/angsuran-single/{single}/pinjaman-single', [AngsuranSingleController::class, 'daftarPinjaman'])->name('angsuran-single.daftar-pinjaman');
+
+// cetak dokumen
+Route::post('/cetak-proposal', [CetakDokumen::class, 'proposalPinjaman'])->name('cetak.proposal');
+Route::post('/dokumen-pinjaman', [CetakDokumen::class, 'dokumenPinjaman'])->name('cetak.dokumen');
+Route::post('/cetak-kuitansi-angsuran', [CetakDokumen::class, 'kuitansiAngsuran'])->name('cetak.kuitansi-angsuran');
+Route::post('/cetak-kuitansi-lunas', [CetakDokumen::class, 'kuitansiLunas'])->name('cetak.kuitansi-lunas');
 
 Route::put('/peminjam-kelompok/{kelompok}/pinjaman-kelompok/{pinjaman_kelompok}/update-full', [PinjamanKelompokController::class, 'updateFull'])->name('pinjaman-kelompok.update-full');
 Route::put('/peminjam-single/{single}/pinjaman-single/{pinjaman_single}/update-full', [PinjamanSingleController::class, 'updateFull'])->name('pinjaman-single.update-full');

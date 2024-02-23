@@ -23,6 +23,7 @@ class AngsuranSingleController extends Controller
         $single_name = Peminjam::where('id', $single)->first()->nama;
         $tgl_lunas = Pinjaman::where('id', $pinjaman_single)->first()->tgl_pelunasan;
         $tgl_pinjaman = Pinjaman::where('id', $pinjaman_single)->first()->tgl_pinjaman;
+        $last_angsuran =  Angsuran::where('pinjaman_id', $pinjaman_single)->orderBy('tgl_angsuran', 'DESC')->first()->tgl_angsuran;
 
         $bulan_iuran = Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($tgl_lunas));
 
@@ -31,6 +32,7 @@ class AngsuranSingleController extends Controller
             'pinjaman' => $pinjaman,
             'single' => $single,
             'tgl_lunas' => $tgl_lunas,
+            'last_angsuran' => Carbon::parse($last_angsuran)->addDay(),
             'tgl_pinjaman' => $tgl_pinjaman,
             'bulan_iuran' => $bulan_iuran,
             'periode' => Pinjaman::where('id', $pinjaman_single)->first()->periode_pinjaman,
@@ -100,7 +102,7 @@ class AngsuranSingleController extends Controller
         $data = new Angsuran;
         $data->pinjaman_id = $pinjaman_id;
         $data->tgl_angsuran = $request->tgl_angsuran;
-        $data->angsuran_dibayarkan = $request->angsuran_dibayarkan;
+        $data->angsuran_dibayarkan = intval(str_replace('.', '', $request->angsuran_dibayarkan));
         $data->keterangan = $request->keterangan;
         // $data->iuran_tunggakan = 0; //next we will delete this attribute
         if(Angsuran::where('pinjaman_id', $pinjaman_id)->count() == 0){
@@ -111,11 +113,11 @@ class AngsuranSingleController extends Controller
                 $data->tgl_jatuh_tempo = $jatuhTempoBulanIni;
                 $data->iuran = 0;
                 $data->total_iuran_dibayarkan = 0;
-                $data->pokok = $request->angsuran_dibayarkan;
+                $data->pokok = intval(str_replace('.', '', $request->angsuran_dibayarkan));
                 $data->simpanan = 0;
-                $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan;
+                $data->total_pokok_dibayarkan = intval(str_replace('.', '', $request->angsuran_dibayarkan));
                 $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                $data->pokok_tunggakan = $nilai_pinjaman - $request->angsuran_dibayarkan;
+                $data->pokok_tunggakan = $nilai_pinjaman - intval(str_replace('.', '', $request->angsuran_dibayarkan));
                 // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
             }elseif($bulanTahunPeminjaman != $bulanTahunAngsuranBaru){
                 $perbedaanBulan = $bulanTahunPeminjaman->diffInMonths($bulanTahunAngsuranBaru);
@@ -126,21 +128,21 @@ class AngsuranSingleController extends Controller
                     if ($tanggalAngsuranBaru >= $jatuhTempoBulanIni) {
                         $data->iuran = $nilai_iuran;
                         $data->total_iuran_dibayarkan = $nilai_iuran;
-                        $data->pokok = $request->angsuran_dibayarkan - $nilai_iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $nilai_iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan - $nilai_iuran;
+                        $data->total_pokok_dibayarkan = intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $nilai_iuran;
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($request->angsuran_dibayarkan - $nilai_iuran);
+                        $data->pokok_tunggakan = $nilai_pinjaman - (intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $nilai_iuran);
                         // bermasalah disini
                     } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
                         $data->iuran = 0;
                         $data->total_iuran_dibayarkan = 0;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->angsuran_dibayarkan;
+                        $data->pokok = intval(str_replace('.', '', $request->angsuran_dibayarkan));
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan;
+                        $data->total_pokok_dibayarkan = intval(str_replace('.', '', $request->angsuran_dibayarkan));
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - $request->angsuran_dibayarkan;
+                        $data->pokok_tunggakan = $nilai_pinjaman - intval(str_replace('.', '', $request->angsuran_dibayarkan));
                     }
                 }elseif($perbedaanBulan > 1){
                     // Cek apakah tanggal angsuran yang akan diinputkan sudah melewati tanggal jatuh tempo di bulan tersebut
@@ -152,22 +154,22 @@ class AngsuranSingleController extends Controller
                         $data->iuran = $iuran;
                         $data->total_iuran_dibayarkan = $iuran;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan - $iuran;
+                        $data->total_pokok_dibayarkan = intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran;
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($request->angsuran_dibayarkan - $iuran);
+                        $data->pokok_tunggakan = $nilai_pinjaman - (intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran);
                     } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
                         // Cukup bayar iuran di bulan sebelumnya
                         $iuran = $nilai_pinjaman * ((1.013)**($perbedaanBulan - 1) - 1);
                         $data->iuran = $iuran;
                         $data->total_iuran_dibayarkan = $iuran;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $request->angsuran_dibayarkan - $iuran;
+                        $data->total_pokok_dibayarkan = intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran;
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($request->angsuran_dibayarkan - $iuran);
+                        $data->pokok_tunggakan = $nilai_pinjaman - (intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran);
                     }
                 }
             }
@@ -185,11 +187,11 @@ class AngsuranSingleController extends Controller
                 $data->iuran = 0;
                 $data->total_iuran_dibayarkan = $total_iuran + 0;
                 // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                $data->pokok = $request->angsuran_dibayarkan;
+                $data->pokok = intval(str_replace('.', '', $request->angsuran_dibayarkan));
                 $data->simpanan = 0;
-                $data->total_pokok_dibayarkan = $total_pokok + $request->angsuran_dibayarkan;
+                $data->total_pokok_dibayarkan = $total_pokok + intval(str_replace('.', '', $request->angsuran_dibayarkan));
                 $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $request->angsuran_dibayarkan);
+                $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + intval(str_replace('.', '', $request->angsuran_dibayarkan)));
             }elseif($bulanTahunAngsuranTerakhir != $bulanTahunAngsuranBaru){
                 $perbedaanBulan = $bulanTahunAngsuranTerakhir->diffInMonths($bulanTahunAngsuranBaru);
                 $perbedaanBulanPinjaman = $bulanTahunPeminjaman->diffInMonths($bulanTahunAngsuranBaru);
@@ -202,21 +204,21 @@ class AngsuranSingleController extends Controller
                         $data->iuran = $iuran;
                         $data->total_iuran_dibayarkan = $total_iuran + $iuran;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - $iuran);
+                        $data->total_pokok_dibayarkan = $total_pokok + (intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran);
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - $iuran));
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + (intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran));
                         // bermasalah disini
                     } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
                         $data->iuran = 0;
                         $data->total_iuran_dibayarkan = $total_iuran + 0;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->angsuran_dibayarkan;
+                        $data->pokok = intval(str_replace('.', '', $request->angsuran_dibayarkan));
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $total_pokok + $request->angsuran_dibayarkan;
+                        $data->total_pokok_dibayarkan = $total_pokok + intval(str_replace('.', '', $request->angsuran_dibayarkan));
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $request->angsuran_dibayarkan);
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + intval(str_replace('.', '', $request->angsuran_dibayarkan)));
                     }
                 }elseif($perbedaanBulan > 1){
                     // Cek apakah tanggal angsuran yang akan diinputkan sudah melewati tanggal jatuh tempo di bulan tersebut
@@ -228,21 +230,21 @@ class AngsuranSingleController extends Controller
                         $data->iuran = $iuran;
                         $data->total_iuran_dibayarkan = $total_iuran + $iuran;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - $iuran);
+                        $data->total_pokok_dibayarkan = $total_pokok + (intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran);
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - $iuran));
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + (intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran));
                     } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
                         // Cukup bayar iuran di bulan sebelumnya
                         $iuran = ($nilai_pinjaman - $total_pokok) * ((1.013)**($perbedaanBulan - 1) - 1);
                         $data->iuran = $iuran;
                         $data->total_iuran_dibayarkan = $total_iuran + $iuran;
-                        $data->pokok = $request->angsuran_dibayarkan - $iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $total_pokok + ($request->angsuran_dibayarkan - $iuran);
+                        $data->total_pokok_dibayarkan = $total_pokok + (intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran);
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->angsuran_dibayarkan - $iuran));
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + (intval(str_replace('.', '', $request->angsuran_dibayarkan)) - $iuran));
                     }
                 }
             }
@@ -308,7 +310,7 @@ class AngsuranSingleController extends Controller
         $data = Angsuran::find($angsuran_id);
         $data->pinjaman_id = $pinjaman_id;
         $data->tgl_angsuran = $request->etgl_angsuran;
-        $data->angsuran_dibayarkan = $request->eangsuran_dibayarkan;
+        $data->angsuran_dibayarkan = intval(str_replace('.', '', $request->eangsuran_dibayarkan));
         $data->keterangan = $request->eketerangan;
 
         if(Angsuran::where('pinjaman_id', $pinjaman_id)->count() == 0 || $data->id == Angsuran::where('pinjaman_id', $pinjaman_id)->oldest()->first()->id){
@@ -319,11 +321,11 @@ class AngsuranSingleController extends Controller
                 $data->tgl_jatuh_tempo = $jatuhTempoBulanIni;
                 $data->iuran = 0;
                 $data->total_iuran_dibayarkan = 0;
-                $data->pokok = $request->eangsuran_dibayarkan;
+                $data->pokok = intval(str_replace('.', '', $request->eangsuran_dibayarkan));
                 $data->simpanan = 0;
-                $data->total_pokok_dibayarkan = $request->eangsuran_dibayarkan;
+                $data->total_pokok_dibayarkan = intval(str_replace('.', '', $request->eangsuran_dibayarkan));
                 $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                $data->pokok_tunggakan = $nilai_pinjaman - $request->eangsuran_dibayarkan;
+                $data->pokok_tunggakan = $nilai_pinjaman - intval(str_replace('.', '', $request->eangsuran_dibayarkan));
                 // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
             }elseif($bulanTahunPeminjaman != $bulanTahunAngsuranBaru){
                 $perbedaanBulan = $bulanTahunPeminjaman->diffInMonths($bulanTahunAngsuranBaru);
@@ -334,21 +336,21 @@ class AngsuranSingleController extends Controller
                     if ($tanggalAngsuranBaru >= $jatuhTempoBulanIni) {
                         $data->iuran = $nilai_iuran;
                         $data->total_iuran_dibayarkan = $nilai_iuran;
-                        $data->pokok = $request->eangsuran_dibayarkan - $nilai_iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $nilai_iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $request->eangsuran_dibayarkan - $nilai_iuran;
+                        $data->total_pokok_dibayarkan = intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $nilai_iuran;
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($request->eangsuran_dibayarkan - $nilai_iuran);
+                        $data->pokok_tunggakan = $nilai_pinjaman - (intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $nilai_iuran);
                         // bermasalah disini
                     } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
                         $data->iuran = 0;
                         $data->total_iuran_dibayarkan = 0;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->eangsuran_dibayarkan;
+                        $data->pokok = intval(str_replace('.', '', $request->eangsuran_dibayarkan));
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $request->eangsuran_dibayarkan;
+                        $data->total_pokok_dibayarkan = intval(str_replace('.', '', $request->eangsuran_dibayarkan));
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - $request->eangsuran_dibayarkan;
+                        $data->pokok_tunggakan = $nilai_pinjaman - intval(str_replace('.', '', $request->eangsuran_dibayarkan));
                     }
                 }elseif($perbedaanBulan > 1){
                     // Cek apakah tanggal angsuran yang akan diinputkan sudah melewati tanggal jatuh tempo di bulan tersebut
@@ -360,22 +362,22 @@ class AngsuranSingleController extends Controller
                         $data->iuran = $iuran;
                         $data->total_iuran_dibayarkan = $iuran;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->eangsuran_dibayarkan - $iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $request->eangsuran_dibayarkan - $iuran;
+                        $data->total_pokok_dibayarkan = intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran;
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($request->eangsuran_dibayarkan - $iuran);
+                        $data->pokok_tunggakan = $nilai_pinjaman - (intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran);
                     } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
                         // Cukup bayar iuran di bulan sebelumnya
                         $iuran = $nilai_pinjaman * ((1.013)**($perbedaanBulan - 1) - 1);
                         $data->iuran = $iuran;
                         $data->total_iuran_dibayarkan = $iuran;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->eangsuran_dibayarkan - $iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $request->eangsuran_dibayarkan - $iuran;
+                        $data->total_pokok_dibayarkan = intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran;
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($request->eangsuran_dibayarkan - $iuran);
+                        $data->pokok_tunggakan = $nilai_pinjaman - (intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran);
                     }
                 }
             }
@@ -408,11 +410,11 @@ class AngsuranSingleController extends Controller
                 $data->iuran = 0;
                 $data->total_iuran_dibayarkan = $total_iuran + 0;
                 // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                $data->pokok = $request->eangsuran_dibayarkan;
+                $data->pokok = intval(str_replace('.', '', $request->eangsuran_dibayarkan));
                 $data->simpanan = 0;
-                $data->total_pokok_dibayarkan = $total_pokok + $request->eangsuran_dibayarkan;
+                $data->total_pokok_dibayarkan = $total_pokok + intval(str_replace('.', '', $request->eangsuran_dibayarkan));
                 $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $request->eangsuran_dibayarkan);
+                $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + intval(str_replace('.', '', $request->eangsuran_dibayarkan)));
             }elseif($bulanTahunAngsuranTerakhir != $bulanTahunAngsuranBaru){
                 $perbedaanBulan = $bulanTahunAngsuranTerakhir->diffInMonths($bulanTahunAngsuranBaru);
                 $perbedaanBulanPinjaman = $bulanTahunPeminjaman->diffInMonths($bulanTahunAngsuranBaru);
@@ -425,21 +427,21 @@ class AngsuranSingleController extends Controller
                         $data->iuran = $iuran;
                         $data->total_iuran_dibayarkan = $total_iuran + $iuran;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->eangsuran_dibayarkan - $iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $total_pokok + ($request->eangsuran_dibayarkan - $iuran);
+                        $data->total_pokok_dibayarkan = $total_pokok + (intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran);
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->eangsuran_dibayarkan - $iuran));
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + (intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran));
                         // bermasalah disini
                     } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
                         $data->iuran = 0;
                         $data->total_iuran_dibayarkan = $total_iuran + 0;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->eangsuran_dibayarkan;
+                        $data->pokok = intval(str_replace('.', '', $request->eangsuran_dibayarkan));
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $total_pokok + $request->eangsuran_dibayarkan;
+                        $data->total_pokok_dibayarkan = $total_pokok + intval(str_replace('.', '', $request->eangsuran_dibayarkan));
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + $request->eangsuran_dibayarkan);
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + intval(str_replace('.', '', $request->eangsuran_dibayarkan)));
                     }
                 }elseif($perbedaanBulan > 1){
                     // Cek apakah tanggal angsuran yang akan diinputkan sudah melewati tanggal jatuh tempo di bulan tersebut
@@ -451,21 +453,21 @@ class AngsuranSingleController extends Controller
                         $data->iuran = $iuran;
                         $data->total_iuran_dibayarkan = $total_iuran + $iuran;
                         // cek apakah angsuran yang dimasukkan melebihi nilai angsuran standar
-                        $data->pokok = $request->eangsuran_dibayarkan - $iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $total_pokok + ($request->eangsuran_dibayarkan - $iuran);
+                        $data->total_pokok_dibayarkan = $total_pokok + (intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran);
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->eangsuran_dibayarkan - $iuran));
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + (intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran));
                     } elseif($tanggalAngsuranBaru < $jatuhTempoBulanIni) {
                         // Cukup bayar iuran di bulan sebelumnya
                         $iuran = ($nilai_pinjaman - $total_pokok) * ((1.013)**($perbedaanBulan - 1) - 1);
                         $data->iuran = $iuran;
                         $data->total_iuran_dibayarkan = $total_iuran + $iuran;
-                        $data->pokok = $request->eangsuran_dibayarkan - $iuran;
+                        $data->pokok = intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran;
                         $data->simpanan = 0;
-                        $data->total_pokok_dibayarkan = $total_pokok + ($request->eangsuran_dibayarkan - $iuran);
+                        $data->total_pokok_dibayarkan = $total_pokok + (intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran);
                         $data->total_simpanan = 0; // karena belum ada data sebelumnya
-                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + ($request->eangsuran_dibayarkan - $iuran));
+                        $data->pokok_tunggakan = $nilai_pinjaman - ($total_pokok + (intval(str_replace('.', '', $request->eangsuran_dibayarkan)) - $iuran));
                     }
                 }
             }

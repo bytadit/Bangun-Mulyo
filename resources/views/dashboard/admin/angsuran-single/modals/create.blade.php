@@ -13,11 +13,10 @@
                     <div class="row g-3">
                         <input type="hidden" name="single_id" value="{{ $single }}">
                         <input type="hidden" name="pinjaman_id" value="{{ $pinjaman_single }}">
-
                         <div class="col-lg-12">
                             <div>
                                 <label for="tgl_angsuran" class="form-label">Tanggal Angsuran</label>
-                                <input type="date" class="form-control" name="tgl_angsuran" id="tgl_angsuran"
+                                <input type="date" class="form-control" value="{{\Carbon\Carbon::parse($last_angsuran)->format('Y-m-d')}}" name="tgl_angsuran" id="tgl_angsuran"
                                     placeholder="Masukkan tanggal angsuran...">
                             </div>
                         </div><!--end col-->
@@ -38,7 +37,7 @@
                         <div class="col-lg-12">
                             <div>
                                 <label for="angsuran_dibayarkan" class="form-label">Angsuran Dibayarkan</label>
-                                <input type="number" min="1" class="form-control" name="angsuran_dibayarkan" id="angsuran_dibayarkan"
+                                <input type="text" class="form-control" onkeyup="formatAngsuran(this)" name="angsuran_dibayarkan" id="angsuran_dibayarkan"
                                     placeholder="Masukkan angsuran dibayarkan...">
                             </div>
                         </div><!--end col-->
@@ -58,3 +57,16 @@
         </div>
     </div>
 </div>
+<script>
+    function formatAngsuran(input) {
+        // Remove non-numeric characters, except leading zeros
+        var value = input.value.replace(/^0+/, ''); // Remove leading zeros
+        value = value.replace(/\D/g, ''); // Remove non-digits
+
+        // Format the number with thousands separator and a period for decimal
+        var formattedValue = new Intl.NumberFormat('id-ID').format(value);
+
+        // Update the input value
+        input.value = formattedValue;
+    }
+</script>
