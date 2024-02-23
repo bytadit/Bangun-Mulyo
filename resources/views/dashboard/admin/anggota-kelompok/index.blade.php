@@ -201,7 +201,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <table id="scroll-horizontal" class="table nowrap align-middle table-hover table-bordered" style="width:100%">
+                                <table id="alternative-pagination" class="table align-middle table-hover table-bordered" style="width:100%">
                                     <thead>
                                     <tr>
                                         <th>No.</th>
@@ -246,13 +246,13 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    {{-- <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('pinjaman-anggota.index', ['kelompok' => $kelompok, 'anggota' => $anggota->id]) }}">
+                                                    {{-- <a class="btn btn-sm btn-primary mr-1" href="{{ route('pinjaman-anggota.index', ['kelompok' => $kelompok, 'anggota' => $anggota->id]) }}">
                                                         <i class="ri-group-2-fill"></i> <span >@lang('Detail Pinjaman')</span>
                                                     </a> --}}
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataAnggotaKelompok{{$anggota->id}}">
+                                                    <button class="btn btn-sm btn-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataAnggotaKelompok{{$anggota->id}}">
                                                         <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
                                                     </button>
-                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataAnggotaKelompok{{$anggota->id}}">
+                                                    <button class="btn btn-sm btn-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataAnggotaKelompok{{$anggota->id}}">
                                                         <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
                                                     </button>
                                                 </div>
@@ -303,6 +303,7 @@
                                         <th>Jumlah Pinjaman</th>
                                         <th>Keperluan</th>
                                         <th>Keterangan</th>
+                                        <th>Dokumen</th>
                                         <th>Aksi</th>
                                     </tr>
                                     </thead>
@@ -330,13 +331,23 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('pinjaman-kelompok.show', ['kelompok' => $kelompok, 'pinjaman_kelompok' => $pinjaman->id]) }}">
+                                                    <form action="{{ route('cetak.proposal') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="id_peminjam" value="{{ $pinjaman->peminjam->id }}">
+                                                        <input type="hidden" name="id_pinjaman" value="{{ $pinjaman->id }}">
+                                                        <button type="submit" class="btn btn-sm btn-info mr-1"><i class="ri-group-2-fill"></i> <span >@lang('Cetak Proposal')</span></button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center fw-medium">
+                                                    <a class="btn btn-sm btn-primary mr-1" href="{{ route('pinjaman-kelompok.show', ['kelompok' => $kelompok, 'pinjaman_kelompok' => $pinjaman->id]) }}">
                                                         <i class="ri-group-2-fill"></i> <span >@lang('Detail Pinjaman')</span>
                                                     </a>
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataPinjaman{{$pinjaman->id}}">
+                                                    <button class="btn btn-sm btn-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataPinjaman{{$pinjaman->id}}">
                                                         <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
                                                     </button>
-                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataPinjaman{{$pinjaman->id}}">
+                                                    <button class="btn btn-sm btn-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataPinjaman{{$pinjaman->id}}">
                                                         <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
                                                     </button>
                                                 </div>

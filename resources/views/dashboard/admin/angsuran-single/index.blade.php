@@ -249,17 +249,17 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('pinjaman-single.show', ['single' => $single, 'pinjaman_single' => $angsuran->id]) }}">
+                                                    <a class="btn btn-sm btn-primary mr-1" href="{{ route('pinjaman-single.show', ['single' => $single, 'pinjaman_single' => $angsuran->id]) }}">
                                                         <i class="ri-group-2-fill"></i> <span >@lang('Cetak Kuitansi')</span>
                                                     </a>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataAngsuranSingle{{$angsuran->id}}">
+                                                    <button class="btn btn-sm btn-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataAngsuranSingle{{$angsuran->id}}">
                                                         <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
                                                     </button>
-                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataAngsuranSingle{{$angsuran->id}}">
+                                                    <button class="btn btn-sm btn-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataAngsuranSingle{{$angsuran->id}}">
                                                         <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
                                                     </button>
                                                 </div>

@@ -201,10 +201,10 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataAngsuranAnggota{{$angsuran->id}}">
+                                                    <button class="btn btn-sm btn-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editDataAngsuranAnggota{{$angsuran->id}}">
                                                         <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
                                                     </button>
-                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataAngsuranAnggota{{$angsuran->id}}">
+                                                    <button class="btn btn-sm btn-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteDataAngsuranAnggota{{$angsuran->id}}">
                                                         <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
                                                     </button>
                                                 </div>

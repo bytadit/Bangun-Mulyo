@@ -69,20 +69,20 @@
                                             </td>
                                             {{-- <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <a class="btn btn-sm btn-soft-success mr-1" href="#">
+                                                    <a class="btn btn-sm btn-success mr-1" href="#">
                                                         <i class="ri-file-text-fill"></i> <span >@lang('Cetak Proposal')</span>
                                                     </a>
                                                 </div>
                                             </td> --}}
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
-                                                    <a class="btn btn-sm btn-soft-primary mr-1" href="{{ route('detail-kelompok.index', ['kelompok' => $kelompok->id]) }}">
+                                                    <a class="btn btn-sm btn-primary mr-1" href="{{ route('detail-kelompok.index', ['kelompok' => $kelompok->id]) }}">
                                                         <i class="ri-group-2-fill"></i> <span >@lang('Detail Kelompok')</span>
                                                     </a>
-                                                    <button class="btn btn-sm btn-soft-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editData{{$kelompok->id}}">
+                                                    <button class="btn btn-sm btn-warning mx-1"  data-bs-toggle="modal" data-bs-target="#editData{{$kelompok->id}}">
                                                         <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
                                                     </button>
-                                                    <button class="btn btn-sm btn-soft-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteData{{$kelompok->id}}">
+                                                    <button class="btn btn-sm btn-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteData{{$kelompok->id}}">
                                                         <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
                                                     </button>
                                                 </div>
