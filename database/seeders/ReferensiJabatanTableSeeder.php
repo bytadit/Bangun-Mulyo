@@ -27,5 +27,8 @@ class ReferensiJabatanTableSeeder extends Seeder
         DB::table('referensi_jabatans')->insert([
             'nama_jabatan' => 'Anggota',
         ]);
+        DB::table('referensi_jabatans')->insert([
+            'nama_jabatan' => 'Kepala Desa',
+        ]);
     }
 }

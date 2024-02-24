@@ -31,5 +31,9 @@ class PejabatBumdesTableSeeder extends Seeder
             'user_id' => 4,
             'jabatan_id' => 4
         ]);
+        DB::table('pejabat_bumdes')->insert([
+            'user_id' => 5,
+            'jabatan_id' => 5
+        ]);
     }
 }

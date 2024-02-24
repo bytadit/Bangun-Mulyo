@@ -7,6 +7,7 @@ use App\Models\Angsuran;
 use App\Models\PejabatBumdes;
 use App\Models\Peminjam;
 use App\Models\Pinjaman;
+use App\Models\PinjamanAnggota;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\TemplateProcessor;
 use PhpOffice\PhpWord\PhpWord;
@@ -34,28 +35,52 @@ class CetakDokumen extends Controller
             $nama_ketua = 'Belum Di Set';
             $usia_ketua = 'Belum Di Set';
             $pekerjaan_ketua = 'Belum Di Set';
+            $alamat_ketua = 'Belum Di Set';
+            $pinjaman_ketua = 'Belum Di Set';
+            $jaminan_ketua = 'Belum Di Set';
+            $nj_ketua = 'Belum Di Set';
         }elseif(AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->count() > 0){
             $nama_ketua = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->first()->nama;
             $usia_ketua = Carbon::parse(AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->first()->tgl_lahir)->diffInYears(Carbon::now());
             $pekerjaan_ketua = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->first()->pekerjaan;
+            $alamat_ketua = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->first()->alamat;
+            $pinjaman_ketua = PinjamanAnggota::where('anggota_id', AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->first()->id)->first()->jumlah_pinjaman;
+            $jaminan_ketua = PinjamanAnggota::where('anggota_id', AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->first()->id)->first()->jaminan;
+            $nj_ketua = PinjamanAnggota::where('anggota_id', AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->first()->id)->first()->nilai_jaminan;
         }
         if(AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 2)->count() == 0){
             $nama_bendahara = 'Belum Di Set';
             $usia_bendahara = 'Belum Di Set';
             $pekerjaan_bendahara = 'Belum Di Set';
+            $alamat_bendahara = 'Belum Di Set';
+            $pinjaman_bendahara = 'Belum Di Set';
+            $jaminan_bendahara = 'Belum Di Set';
+            $nj_bendahara = 'Belum Di Set';
         }elseif(AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 2)->count() > 0){
             $nama_bendahara = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 2)->first()->nama;
             $usia_bendahara = Carbon::parse(AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 2)->first()->tgl_lahir)->diffInYears(Carbon::now());
             $pekerjaan_bendahara = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 2)->first()->pekerjaan;
+            $alamat_bendahara = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 2)->first()->alamat;
+            $pinjaman_bendahara = PinjamanAnggota::where('anggota_id', AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 2)->first()->id)->first()->jumlah_pinjaman;
+            $jaminan_ketua = PinjamanAnggota::where('anggota_id', AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 2)->first()->id)->first()->jaminan;
+            $nj_ketua = PinjamanAnggota::where('anggota_id', AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 2)->first()->id)->first()->nilai_jaminan;
         }
         if(AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 3)->count() == 0){
             $nama_sekretaris = 'Belum Di Set';
             $usia_sekretaris = 'Belum Di Set';
             $pekerjaan_sekretaris = 'Belum Di Set';
+            $alamat_sekretaris = 'Belum Di Set';
+            $pinjaman_sekretaris = 'Belum Di Set';
+            $jaminan_sekretaris = 'Belum Di Set';
+            $nj_sekretaris = 'Belum Di Set';
         }elseif(AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 3)->count() > 0){
             $nama_sekretaris = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 3)->first()->nama;
             $usia_sekretaris = Carbon::parse(AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 3)->first()->tgl_lahir)->diffInYears(Carbon::now());
             $pekerjaan_sekretaris = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 3)->first()->pekerjaan;
+            $alamat_sekretaris = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 3)->first()->alamat;
+            $pinjaman_sekretaris = PinjamanAnggota::where('anggota_id', AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 3)->first()->id)->first()->jumlah_pinjaman;
+            $jaminan_ketua = PinjamanAnggota::where('anggota_id', AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 3)->first()->id)->first()->jaminan;
+            $nj_ketua = PinjamanAnggota::where('anggota_id', AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 3)->first()->id)->first()->nilai_jaminan;
         }
         if(PejabatBumdes::where('jabatan_id', 5)->count() == 0){
             $kepala_desa = 'Belum Di Set';
@@ -82,9 +107,14 @@ class CetakDokumen extends Controller
             // Building the array structure
             $values[] = [
                 'urutan' => array_search($anggota->id, $orderedAnggota) + 4,
+                'id_kelompok' => $id_peminjam,
+                'periode' => $periode,
                 'nama_anggota' => $anggota->nama, // Adjust this based on your actual attribute names
                 'usia_anggota' => Carbon::parse($anggota->tgl_lahir)->diffInYears(Carbon::now()) . ' tahun',
                 'pekerjaan_anggota' => $anggota->pekerjaan, // Adjust this based on your actual attribute names
+                'pinjaman_angg' => PinjamanAnggota::where('anggota_id', $anggota->id)->first()->jumlah_pinjaman,
+                'jaminan_anggota' => PinjamanAnggota::where('anggota_id', $anggota->id)->first()->jaminan,
+                'nj_anggota' => PinjamanAnggota::where('anggota_id', $anggota->id)->first()->nilai_jaminan
             ];
         }
         // Load the Word document template
@@ -93,9 +123,31 @@ class CetakDokumen extends Controller
         $templateProcessor->cloneRowAndSetValues('urutan', $values);
         $templateProcessor->setValue('nama_kelompok', $nama_kelompok);
         $templateProcessor->setValue('alamat_kelompok', $alamat_kelompok);
+
         $templateProcessor->setValue('nama_ketua', $nama_ketua);
         $templateProcessor->setValue('usia_ketua', $usia_ketua);
         $templateProcessor->setValue('pekerjaan_ketua', $pekerjaan_ketua);
+        $templateProcessor->setValue('alamat_ketua', $alamat_ketua);
+        $templateProcessor->setValue('pinjaman_ketua', $pinjaman_ketua);
+        $templateProcessor->setValue('jaminan_ketua', $jaminan_ketua);
+        $templateProcessor->setValue('nj_ketua', $nj_ketua);
+
+        $templateProcessor->setValue('nama_sekretaris', $nama_sekretaris);
+        $templateProcessor->setValue('usia_sekretaris', $usia_sekretaris);
+        $templateProcessor->setValue('pekerjaan_sekretaris', $pekerjaan_sekretaris);
+        $templateProcessor->setValue('alamat_sekretaris', $alamat_sekretaris);
+        $templateProcessor->setValue('pinjaman_sekre', $pinjaman_sekretaris);
+        $templateProcessor->setValue('jaminan_sekretaris', $jaminan_sekretaris);
+        $templateProcessor->setValue('nj_sekretaris', $nj_sekretaris);
+
+        $templateProcessor->setValue('nama_bendahara', $nama_bendahara);
+        $templateProcessor->setValue('usia_bendahara', $usia_bendahara);
+        $templateProcessor->setValue('pekerjaan_bendahara', $pekerjaan_bendahara);
+        $templateProcessor->setValue('alamat_bendahara', $alamat_bendahara);
+        $templateProcessor->setValue('pinjaman_bend', $pinjaman_bendahara);
+        $templateProcessor->setValue('jaminan_bendahara', $jaminan_bendahara);
+        $templateProcessor->setValue('nj_bendahara', $nj_bendahara);
+
         $templateProcessor->setValue('no_hp', $no_hp);
         $templateProcessor->setValue('periode', $periode);
         $templateProcessor->setValue('jml_pinjaman', $jml_pinjaman);
@@ -103,12 +155,6 @@ class CetakDokumen extends Controller
         $templateProcessor->setValue('terbilang', $terbilang);
         $templateProcessor->setValue('jml_anggota', $jml_anggota);
         $templateProcessor->setValue('kepala_desa', $kepala_desa);
-        $templateProcessor->setValue('nama_sekretaris', $nama_sekretaris);
-        $templateProcessor->setValue('usia_sekretaris', $usia_sekretaris);
-        $templateProcessor->setValue('pekerjaan_sekretaris', $pekerjaan_sekretaris);
-        $templateProcessor->setValue('nama_bendahara', $nama_bendahara);
-        $templateProcessor->setValue('usia_bendahara', $usia_bendahara);
-        $templateProcessor->setValue('pekerjaan_bendahara', $pekerjaan_bendahara);
         $templateProcessor->setValue('nama_dusun', $nama_dusun);
         // $templateProcessor->setValue('urutan', $urutan);
         // Save the document to a temporary file
