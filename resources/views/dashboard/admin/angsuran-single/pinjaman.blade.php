@@ -87,7 +87,7 @@
                                                         @csrf
                                                         <input type="hidden" name="id_peminjam" value="{{ $pinjaman->peminjam->id }}">
                                                         <input type="hidden" name="id_pinjaman" value="{{ $pinjaman->id }}">
-                                                        <button type="submit" class="btn btn-sm btn-success mr-1"><i class="ri-group-2-fill"></i> <span >@lang('Kuitansi Lunas')</span></button>
+                                                        <button type="submit" class="btn btn-sm mr-1 {{ $pinjaman->keterangan == 0 ? 'disabled btn-danger' : 'btn-success'}}"><i class="ri-group-2-fill"></i> <span >@lang('Kuitansi Lunas')</span></button>
                                                     </form>
                                                 </div>
                                             </td>
