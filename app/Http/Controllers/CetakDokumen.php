@@ -297,10 +297,10 @@ class CetakDokumen extends Controller
          $templateProcessor->setValue('ketua_kelompok', $ketua_kelompok);
 
          // Save the document to a temporary file
-         $tempFile = tempnam(sys_get_temp_dir(), 'Kuitansi-SPP-'. Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan);
+         $tempFile = tempnam(sys_get_temp_dir(), 'Kuitansi-Lunas-'.$nama_kelompok. '-'.Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan);
          $templateProcessor->saveAs($tempFile);
          // Download the document
-         return response()->download($tempFile, 'Kuitansi-SPP-'. Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan . '.docx')->deleteFileAfterSend();
+         return response()->download($tempFile, 'Kuitansi-Lunas-'.$nama_kelompok. '-'.Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan . '.docx')->deleteFileAfterSend();
 
         // try{
 
