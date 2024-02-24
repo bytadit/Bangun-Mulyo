@@ -179,6 +179,7 @@ class CetakDokumen extends Controller
             return redirect()->route('detail-kelompok.index', ['kelompok' => $kelompok]);
         }
     }
+
     public function kuitansiAngsuran(Request $request){
         try{
             // Fetch data from the database
@@ -227,7 +228,7 @@ class CetakDokumen extends Controller
             $templateProcessor->setValue('angs_bayar', $jml_angsuran);
             $templateProcessor->setValue('nilai_iuran', $nilai_iuran);
             $templateProcessor->setValue('sum_an', $urutan);
-            $templateProcessor->setValue('tgl_lunas', $tgl_lunas != null ? Carbon::parse(Angsuran::where('id', $id_angsuran)->first()->tgl_pelunasan)->isoFormat('D MMMM Y') : 'Belum Lunas');
+            $templateProcessor->setValue('tgl_lunas', $tgl_lunas != null ? Carbon::parse(Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan)->isoFormat('D MMMM Y') : 'Belum Lunas');
 
             // Save the document to a temporary file
             $tempFile = tempnam(sys_get_temp_dir(), 'Kuitansi-SPP-'. $tgl_angsuran);
@@ -268,29 +269,45 @@ class CetakDokumen extends Controller
         return response()->download($tempFile, 'document.docx')->deleteFileAfterSend();
     }
     public function kuitansiLunas(Request $request){
-        // Fetch data from the database
-        $users = User::all(); // Example: Fetching all users
+         // Fetch data from the database
+         $id_peminjam = $request->id_peminjam;
+         $id_pinjaman = $request->id_pinjaman;
 
-        // Create a new PHPWord object
-        $phpWord = new PhpWord();
+        //  $angs_id = Angsuran::where('pinjaman_id', $id_pinjaman)->orderBy('tgl_angsuran', 'DESC')->first()->id;
+         $last_angs = Carbon::parse(Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan);
+         $thn_angs = $last_angs->format('Y');
+         $nama_kelompok = Peminjam::where('id', $id_peminjam)->first()->nama;
+         $jml_pinjaman = number_format(Pinjaman::where('id', $id_pinjaman)->first()->jumlah_pinjaman, 2, ',', '.');
+         $terbilang = Terbilang::make(Pinjaman::where('id', $id_pinjaman)->first()->jumlah_pinjaman);
+         $tgl_lunas = $last_angs->format('d, F Y');
+         $ketua_kelompok = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->first()->nama;
+         $nama_bendahara = PejabatBumdes::where('jabatan_id', 2)->first()->user->name;
+         $ketua_bumdes = PejabatBumdes::where('jabatan_id', 1)->first()->user->name;
+         // Load the Word document template
+         $templateProcessor = new TemplateProcessor(storage_path('app/kuitansi-lunas.docx'));
 
-        // Add a section to the document
-        $section = $phpWord->addSection();
+         // Replace placeholders with actual data
+         $templateProcessor->setValue('thn_angs', $thn_angs);
+         $templateProcessor->setValue('nama_kelompok', $nama_kelompok);
+         $templateProcessor->setValue('jml_pinjaman', $jml_pinjaman);
+         $templateProcessor->setValue('terbilang', $terbilang);
+         $templateProcessor->setValue('tgl_lunas', $tgl_lunas != null ? Carbon::parse(Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan)->isoFormat('D MMMM Y') : 'Belum Lunas');
+         $templateProcessor->setValue('ketua_bumdes', $ketua_bumdes);
+         $templateProcessor->setValue('nama_bendahara', $nama_bendahara);
+         $templateProcessor->setValue('ketua_kelompok', $ketua_kelompok);
 
-        // Add content to the section (example: table of users)
-        $table = $section->addTable();
-        foreach ($users as $user) {
-            $table->addRow();
-            $table->addCell()->addText($user->name);
-            $table->addCell()->addText($user->email);
-        }
+         // Save the document to a temporary file
+         $tempFile = tempnam(sys_get_temp_dir(), 'Kuitansi-SPP-'. Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan);
+         $templateProcessor->saveAs($tempFile);
+         // Download the document
+         return response()->download($tempFile, 'Kuitansi-SPP-'. Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan . '.docx')->deleteFileAfterSend();
 
-        // Save the document to a temporary file
-        $tempFile = tempnam(sys_get_temp_dir(), 'phpword');
-        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
-        $objWriter->save($tempFile);
+        // try{
 
-        // Download the document
-        return response()->download($tempFile, 'document.docx')->deleteFileAfterSend();
+        // }catch(\Throwable $e){
+        //     $kelompok = $request->id_peminjam;
+        //     Alert::error('Data Tidak Lengkap', $e->getMessage());
+        //     return redirect()->back();
+        // }
     }
 }

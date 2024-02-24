@@ -55,6 +55,7 @@
                                         <th>Jumlah Pinjaman</th>
                                         <th>Keperluan</th>
                                         <th>Keterangan</th>
+                                        <th>Dokumen</th>
                                         <th>Aksi</th>
                                     </tr>
                                     </thead>
@@ -79,6 +80,16 @@
                                             </td>
                                             <td>
                                                 <span class="badge border {{$pinjaman->keterangan == 1 ? 'border-success text-success' : 'border-danger text-danger'}}">{{$pinjaman->keterangan == 1 ? 'Lunas' : 'Belum Lunas'}}</span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center fw-medium">
+                                                    <form action="{{ route('cetak.kuitansi-lunas') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="id_peminjam" value="{{ $pinjaman->peminjam->id }}">
+                                                        <input type="hidden" name="id_pinjaman" value="{{ $pinjaman->id }}">
+                                                        <button type="submit" class="btn btn-sm btn-success mr-1"><i class="ri-group-2-fill"></i> <span >@lang('Kuitansi Lunas')</span></button>
+                                                    </form>
+                                                </div>
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center fw-medium">
