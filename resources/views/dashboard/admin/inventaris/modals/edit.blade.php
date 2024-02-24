@@ -28,7 +28,7 @@
                         <div class="col-lg-12">
                             <div>
                                 <label for="eharga_satuan" class="form-label">Harga Satuan</label>
-                                <input type="number" min="1" value="{{$invent->harga_satuan}}" class="form-control" name="eharga_satuan" id="eharga_satuan" placeholder="Masukkan harga satuan...">
+                                <input type="text" value="{{$invent->harga_satuan}}" class="form-control" name="eharga_satuan" id="eharga_satuan" placeholder="Masukkan harga satuan..." onkeyup="formatAngsuran(this)">
                             </div>
                         </div><!--end col-->
                         <div class="col-lg-12 mb-3">
@@ -57,3 +57,16 @@
         </div>
     </div>
 </div>
+<script>
+    function formatAngsuran(input) {
+        // Remove non-numeric characters, except leading zeros
+        var value = input.value.replace(/^0+/, ''); // Remove leading zeros
+        value = value.replace(/\D/g, ''); // Remove non-digits
+
+        // Format the number with thousands separator and a period for decimal
+        var formattedValue = new Intl.NumberFormat('id-ID').format(value);
+
+        // Update the input value
+        input.value = formattedValue;
+    }
+</script>

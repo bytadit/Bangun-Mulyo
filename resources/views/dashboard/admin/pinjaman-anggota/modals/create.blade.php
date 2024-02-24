@@ -30,14 +30,14 @@
                         <div class="col-lg-12">
                             <div>
                                 <label for="jumlah_pinjaman" class="form-label">Jumlah Pinjaman</label>
-                                <input type="number" min="1" class="form-control" name="jumlah_pinjaman"
+                                <input type="text" class="form-control" name="jumlah_pinjaman" onkeyup="formatAngsuran(this)"
                                     id="jumlah_pinjaman" placeholder="Masukkan jumlah pinjaman...">
                             </div>
                         </div><!--end col-->
                         <div class="col-lg-12">
                             <div>
                                 <label for="nilai_angsuran" class="form-label">Nilai Angsuran</label>
-                                <input type="number" min="1" class="form-control" name="nilai_angsuran"
+                                <input type="text" class="form-control" name="nilai_angsuran" onkeyup="formatAngsuran(this)"
                                     id="nilai_angsuran" placeholder="Masukkan nilai angsuran...">
                             </div>
                         </div><!--end col-->
@@ -51,7 +51,7 @@
                         <div class="col-lg-12">
                             <div>
                                 <label for="nilai_jaminan" class="form-label">Nilai Jaminan</label>
-                                <input type="number" min="1" class="form-control" name="nilai_jaminan"
+                                <input type="text" class="form-control" name="nilai_jaminan" onkeyup="formatAngsuran(this)"
                                     id="nilai_jaminan" placeholder="Masukkan nilai jaminan...">
                             </div>
                         </div><!--end col-->
@@ -71,3 +71,16 @@
         </div>
     </div>
 </div>
+<script>
+    function formatAngsuran(input) {
+        // Remove non-numeric characters, except leading zeros
+        var value = input.value.replace(/^0+/, ''); // Remove leading zeros
+        value = value.replace(/\D/g, ''); // Remove non-digits
+
+        // Format the number with thousands separator and a period for decimal
+        var formattedValue = new Intl.NumberFormat('id-ID').format(value);
+
+        // Update the input value
+        input.value = formattedValue;
+    }
+</script>

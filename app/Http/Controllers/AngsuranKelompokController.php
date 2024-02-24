@@ -24,7 +24,11 @@ class AngsuranKelompokController extends Controller
         $kelompok_name = Peminjam::where('id', $kelompok)->first()->nama;
         $tgl_lunas = Pinjaman::where('id', $pinjaman_kelompok)->first()->tgl_pelunasan;
         $tgl_pinjaman = Pinjaman::where('id', $pinjaman_kelompok)->first()->tgl_pinjaman;
-        $last_angsuran =  Angsuran::where('pinjaman_id', $pinjaman_kelompok)->orderBy('tgl_angsuran', 'DESC')->first()->tgl_angsuran;
+        if(Angsuran::where('pinjaman_id', $pinjaman_kelompok)->count() > 0){
+            $last_angsuran =  Angsuran::where('pinjaman_id', $pinjaman_kelompok)->orderBy('tgl_angsuran', 'DESC')->first()->tgl_angsuran;
+        }elseif(Angsuran::where('pinjaman_id', $pinjaman_kelompok)->count() == 0){
+            $last_angsuran =  Carbon::now();
+        }
 
         $bulan_iuran = Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($tgl_lunas));
 

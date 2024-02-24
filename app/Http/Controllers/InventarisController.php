@@ -33,13 +33,13 @@ class InventarisController extends Controller
      */
     public function store(Request $request)
     {
-        $harga_total = $request->harga_satuan * $request->jumlah_barang;
+        $harga_total = intval(str_replace('.', '', $request->harga_satuan)) * $request->jumlah_barang;
         $data = Inventaris::create([
             'tgl_pembukuan' => now(),
             'kode' => uniqid(),
             'nama' => $request->nama_barang,
             'jumlah' => $request->jumlah_barang,
-            'harga_satuan' => $request->harga_satuan,
+            'harga_satuan' => intval(str_replace('.', '', $request->harga_satuan)),
             'harga_total' => $harga_total,
             'kondisi' => $request->kondisi_barang,
             'deskripsi_barang' => $request->deskripsi_barang,
@@ -71,14 +71,14 @@ class InventarisController extends Controller
     public function update(Request $request, string $id)
     {
         $inventaris_id = $request->inventaris_id;
-        $harga_total = $request->eharga_satuan * $request->ejumlah_barang;
+        $harga_total = intval(str_replace('.', '', $request->eharga_satuan)) * $request->ejumlah_barang;
         Inventaris::where('id', $inventaris_id)
             ->update([
                 'tgl_pembukuan' => $request->etgl_pembukuan,
                 'kode' => $request->ekode_barang,
                 'nama' => $request->enama_barang,
                 'jumlah' => $request->ejumlah_barang,
-                'harga_satuan' => $request->eharga_satuan,
+                'harga_satuan' => intval(str_replace('.', '', $request->eharga_satuan)),
                 'harga_total' => $harga_total,
                 'kondisi' => $request->ekondisi_barang,
                 'deskripsi_barang' => $request->edeskripsi_barang,

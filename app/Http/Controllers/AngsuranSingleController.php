@@ -23,7 +23,11 @@ class AngsuranSingleController extends Controller
         $single_name = Peminjam::where('id', $single)->first()->nama;
         $tgl_lunas = Pinjaman::where('id', $pinjaman_single)->first()->tgl_pelunasan;
         $tgl_pinjaman = Pinjaman::where('id', $pinjaman_single)->first()->tgl_pinjaman;
-        $last_angsuran =  Angsuran::where('pinjaman_id', $pinjaman_single)->orderBy('tgl_angsuran', 'DESC')->first()->tgl_angsuran;
+        if(Angsuran::where('pinjaman_id', $pinjaman_single)->count() > 0){
+            $last_angsuran =  Angsuran::where('pinjaman_id', $pinjaman_single)->orderBy('tgl_angsuran', 'DESC')->first()->tgl_angsuran;
+        }elseif(Angsuran::where('pinjaman_id', $pinjaman_single)->count() == 0){
+            $last_angsuran =  Carbon::now();
+        }
 
         $bulan_iuran = Carbon::parse($tgl_pinjaman)->diffInMonths(Carbon::parse($tgl_lunas));
 

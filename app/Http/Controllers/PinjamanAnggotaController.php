@@ -56,12 +56,12 @@ class PinjamanAnggotaController extends Controller
         $data = PinjamanAnggota::create([
             'pinjaman_id' => $pinjaman_id,
             'anggota_id' => $request->anggota_id,
-            'jumlah_pinjaman' => $request->jumlah_pinjaman,
-            'nilai_angsuran' => $request->nilai_angsuran,
-            'iuran' => (1.3/100) * $request->jumlah_pinjaman,
-            'pokok' => $request->nilai_angsuran - ((1.3/100) * $request->jumlah_pinjaman),
+            'jumlah_pinjaman' => intval(str_replace('.', '', $request->jumlah_pinjaman)),
+            'nilai_angsuran' => intval(str_replace('.', '', $request->nilai_angsuran)),
+            'iuran' => (1.3/100) * intval(str_replace('.', '', $request->jumlah_pinjaman)),
+            'pokok' => intval(str_replace('.', '', $request->nilai_angsuran)) - ((1.3/100) * intval(str_replace('.', '', $request->jumlah_pinjaman))),
             'jaminan' => $request->jaminan,
-            'nilai_jaminan' => $request->nilai_jaminan,
+            'nilai_jaminan' => intval(str_replace('.', '', $request->nilai_jaminan)),
             'keterangan' => $request->keterangan,
         ]);
 
@@ -102,12 +102,12 @@ class PinjamanAnggotaController extends Controller
         $data = PinjamanAnggota::where('id', $pinjaman_anggota_id)->update([
             'pinjaman_id' => $pinjaman_id,
             'anggota_id' => $request->eanggota_id,
-            'jumlah_pinjaman' => $request->ejumlah_pinjaman,
-            'nilai_angsuran' => $request->enilai_angsuran,
-            'iuran' => (1.3/100) * $request->ejumlah_pinjaman,
-            'pokok' => $request->enilai_angsuran - ((1.3/100) * $request->ejumlah_pinjaman),
+            'jumlah_pinjaman' => intval(str_replace('.', '', $request->ejumlah_pinjaman)),
+            'nilai_angsuran' => intval(str_replace('.', '', $request->enilai_angsuran)),
+            'iuran' => (1.3/100) * intval(str_replace('.', '', $request->ejumlah_pinjaman)),
+            'pokok' => intval(str_replace('.', '', $request->enilai_angsuran)) - ((1.3/100) * intval(str_replace('.', '', $request->ejumlah_pinjaman))),
             'jaminan' => $request->ejaminan,
-            'nilai_jaminan' => $request->enilai_jaminan,
+            'nilai_jaminan' => intval(str_replace('.', '', $request->enilai_jaminan)),
             'keterangan' => $request->eketerangan,
         ]);
 

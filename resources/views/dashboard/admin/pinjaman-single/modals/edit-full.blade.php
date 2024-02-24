@@ -40,14 +40,14 @@
                         <div class="col-lg-12">
                             <div>
                                 <label for="ejumlah_pinjaman" class="form-label">Nilai Pinjaman</label>
-                                <input type="number" min="1" value="{{ $pinjaman->first()->jumlah_pinjaman }}" class="form-control" name="ejumlah_pinjaman"
+                                <input type="text" value="{{ $pinjaman->first()->jumlah_pinjaman }}" class="form-control" name="ejumlah_pinjaman" onkeyup="formatAngsuran(this)"
                                     id="ejumlah_pinjaman" placeholder="Masukkan nilai pinjaman...">
                             </div>
                         </div><!--end col-->
                         <div class="col-lg-12">
                             <div>
                                 <label for="ejumlah_angsuran" class="form-label">Nilai Angsuran</label>
-                                <input type="number" min="1" value="{{ $pinjaman->first()->jumlah_angsuran }}" class="form-control" name="ejumlah_angsuran"
+                                <input type="text" value="{{ $pinjaman->first()->jumlah_angsuran }}" class="form-control" name="ejumlah_angsuran" onkeyup="formatAngsuran(this)"
                                     id="ejumlah_angsuran" placeholder="Masukkan nilai angsuran...">
                             </div>
                         </div><!--end col-->
@@ -77,3 +77,16 @@
         </div>
     </div>
 </div>
+<script>
+    function formatAngsuran(input) {
+        // Remove non-numeric characters, except leading zeros
+        var value = input.value.replace(/^0+/, ''); // Remove leading zeros
+        value = value.replace(/\D/g, ''); // Remove non-digits
+
+        // Format the number with thousands separator and a period for decimal
+        var formattedValue = new Intl.NumberFormat('id-ID').format(value);
+
+        // Update the input value
+        input.value = formattedValue;
+    }
+</script>
