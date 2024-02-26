@@ -61,7 +61,7 @@
                                         <tr>
                                             <td>{{$loop->iteration}}</td>
                                             <td>
-                                                {{$invent->tgl_pembukuan}}
+                                                {{ date('d-m-Y', strtotime($invent->tgl_pembukuan)) }}
                                             </td>
                                             <td>
                                                 {{$invent->kode}}

@@ -269,45 +269,44 @@ class CetakDokumen extends Controller
         return response()->download($tempFile, 'document.docx')->deleteFileAfterSend();
     }
     public function kuitansiLunas(Request $request){
-         // Fetch data from the database
-         $id_peminjam = $request->id_peminjam;
-         $id_pinjaman = $request->id_pinjaman;
 
-        //  $angs_id = Angsuran::where('pinjaman_id', $id_pinjaman)->orderBy('tgl_angsuran', 'DESC')->first()->id;
-         $last_angs = Carbon::parse(Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan);
-         $thn_angs = $last_angs->format('Y');
-         $nama_kelompok = Peminjam::where('id', $id_peminjam)->first()->nama;
-         $jml_pinjaman = number_format(Pinjaman::where('id', $id_pinjaman)->first()->jumlah_pinjaman, 2, ',', '.');
-         $terbilang = Terbilang::make(Pinjaman::where('id', $id_pinjaman)->first()->jumlah_pinjaman);
-         $tgl_lunas = $last_angs->format('d, F Y');
-         $ketua_kelompok = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->first()->nama;
-         $nama_bendahara = PejabatBumdes::where('jabatan_id', 2)->first()->user->name;
-         $ketua_bumdes = PejabatBumdes::where('jabatan_id', 1)->first()->user->name;
-         // Load the Word document template
-         $templateProcessor = new TemplateProcessor(storage_path('app/kuitansi-lunas.docx'));
+        try{
+            // Fetch data from the database
+            $id_peminjam = $request->id_peminjam;
+            $id_pinjaman = $request->id_pinjaman;
 
-         // Replace placeholders with actual data
-         $templateProcessor->setValue('thn_angs', $thn_angs);
-         $templateProcessor->setValue('nama_kelompok', $nama_kelompok);
-         $templateProcessor->setValue('jml_pinjaman', $jml_pinjaman);
-         $templateProcessor->setValue('terbilang', $terbilang);
-         $templateProcessor->setValue('tgl_lunas', $tgl_lunas != null ? Carbon::parse(Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan)->isoFormat('D MMMM Y') : 'Belum Lunas');
-         $templateProcessor->setValue('ketua_bumdes', $ketua_bumdes);
-         $templateProcessor->setValue('nama_bendahara', $nama_bendahara);
-         $templateProcessor->setValue('ketua_kelompok', $ketua_kelompok);
+           //  $angs_id = Angsuran::where('pinjaman_id', $id_pinjaman)->orderBy('tgl_angsuran', 'DESC')->first()->id;
+            $last_angs = Carbon::parse(Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan);
+            $thn_angs = $last_angs->format('Y');
+            $nama_kelompok = Peminjam::where('id', $id_peminjam)->first()->nama;
+            $jml_pinjaman = number_format(Pinjaman::where('id', $id_pinjaman)->first()->jumlah_pinjaman, 2, ',', '.');
+            $terbilang = Terbilang::make(Pinjaman::where('id', $id_pinjaman)->first()->jumlah_pinjaman);
+            $tgl_lunas = $last_angs->format('d, F Y');
+            $ketua_kelompok = AnggotaKelompok::where('kelompok_id', $id_peminjam)->where('jabatan_id', 1)->first()->nama;
+            $nama_bendahara = PejabatBumdes::where('jabatan_id', 2)->first()->user->name;
+            $ketua_bumdes = PejabatBumdes::where('jabatan_id', 1)->first()->user->name;
+            // Load the Word document template
+            $templateProcessor = new TemplateProcessor(storage_path('app/kuitansi-lunas.docx'));
 
-         // Save the document to a temporary file
-         $tempFile = tempnam(sys_get_temp_dir(), 'Kuitansi-Lunas-'.$nama_kelompok. '-'.Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan);
-         $templateProcessor->saveAs($tempFile);
-         // Download the document
-         return response()->download($tempFile, 'Kuitansi-Lunas-'.$nama_kelompok. '-'.Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan . '.docx')->deleteFileAfterSend();
+            // Replace placeholders with actual data
+            $templateProcessor->setValue('thn_angs', $thn_angs);
+            $templateProcessor->setValue('nama_kelompok', $nama_kelompok);
+            $templateProcessor->setValue('jml_pinjaman', $jml_pinjaman);
+            $templateProcessor->setValue('terbilang', $terbilang);
+            $templateProcessor->setValue('tgl_lunas', $tgl_lunas != null ? Carbon::parse(Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan)->isoFormat('D MMMM Y') : 'Belum Lunas');
+            $templateProcessor->setValue('ketua_bumdes', $ketua_bumdes);
+            $templateProcessor->setValue('nama_bendahara', $nama_bendahara);
+            $templateProcessor->setValue('ketua_kelompok', $ketua_kelompok);
 
-        // try{
-
-        // }catch(\Throwable $e){
-        //     $kelompok = $request->id_peminjam;
-        //     Alert::error('Data Tidak Lengkap', $e->getMessage());
-        //     return redirect()->back();
-        // }
+            // Save the document to a temporary file
+            $tempFile = tempnam(sys_get_temp_dir(), 'Kuitansi-Lunas-'.$nama_kelompok. '-'.Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan);
+            $templateProcessor->saveAs($tempFile);
+            // Download the document
+            return response()->download($tempFile, 'Kuitansi-Lunas-'.$nama_kelompok. '-'.Pinjaman::where('id', $id_pinjaman)->first()->tgl_pelunasan . '.docx')->deleteFileAfterSend();
+        }catch(\Throwable $e){
+            $kelompok = $request->id_peminjam;
+            Alert::error('Data Tidak Lengkap', $e->getMessage());
+            return redirect()->back();
+        }
     }
 }

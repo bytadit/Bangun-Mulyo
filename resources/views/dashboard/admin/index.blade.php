@@ -23,86 +23,146 @@
                     <div class="col-12">
                         <div class="d-flex align-items-lg-center flex-lg-row flex-column">
                             <div class="flex-grow-1">
-                                <h4 class="fs-16 mb-1">Selamat Datang !</h4>
-                                {{-- <p class="text-muted mb-0">Silakan mengisi buku tamu berikut yaa!</p> --}}
+                                <h4 class="fs-16 mb-1">Selamat Datang Admin!</h4>
+                                <p class="text-muted mb-0">Berikut adalah statistik aktivitas koperasi BUMDes "Bangun Mulyo"</p>
                             </div>
-                            {{-- <button type="button" class="btn btn-primary btn-lg btn-label waves-effect waves-light mx-2" data-bs-toggle="modal" data-bs-target="#createData">
-                                <i class="ri-user-add-line label-icon align-middle fs-16 me-2"></i>
-                                Tambah Data
-                            </button>
-                            <button type="button" class="btn btn-warning btn-lg btn-label waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#createReport">
-                                <i class="ri-file-upload-line label-icon align-middle fs-16 me-2"></i>
-                                Ekspor Data
-                            </button> --}}
+                        </div>
+                    </div>
+                    <!--end col-->
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card card-animate">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="fw-medium text-muted mb-0">Total Peminjam Kelompok</h5>
+                                        <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                                data-target="{{ $kelompoks->count() }}">0</span> Kelompok</h2>
+                                    </div>
+                                    <div>
+                                        <div class="avatar-sm flex-shrink-0">
+                                            <span class="avatar-title bg-primary rounded-circle fs-2">
+                                                <i data-feather="users"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- end card body -->
+                        </div> <!-- end card-->
+                    </div> <!-- end col-->
+
+                    <div class="col-md-6">
+                        <div class="card card-animate">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="fw-medium text-muted mb-0">Total Peminjam Perorangan</h5>
+                                        <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                                data-target="{{ $singles->count() }}">0</span> Orang</h2>
+                                    </div>
+                                    <div>
+                                        <div class="avatar-sm flex-shrink-0">
+                                            <span class="avatar-title bg-info rounded-circle fs-2">
+                                                <i data-feather="user"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- end card body -->
+                        </div> <!-- end card-->
+                    </div> <!-- end col-->
+                </div> <!-- end row-->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card card-animate">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="fw-medium text-muted mb-0">Total Pinjaman Lunas</h5>
+                                        <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                                data-target="{{ $pinjamans->where('keterangan', 1)->count() }}">0</span> Pinjaman</h2>
+                                    </div>
+                                    <div>
+                                        <div class="avatar-sm flex-shrink-0">
+                                            <span class="avatar-title bg-success rounded-circle fs-2">
+                                                <i data-feather="check-circle"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- end card body -->
+                        </div> <!-- end card-->
+                    </div> <!-- end col-->
+
+                    <div class="col-md-6">
+                        <div class="card card-animate">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="fw-medium text-muted mb-0">Total Pinjaman Belum Lunas</h5>
+                                        <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                                data-target="{{ $pinjamans->where('keterangan', 0)->count() }}">0</span> Pinjaman</h2>
+                                    </div>
+                                    <div>
+                                        <div class="avatar-sm flex-shrink-0">
+                                            <span class="avatar-title bg-danger rounded-circle fs-2">
+                                                <i data-feather="slash"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- end card body -->
+                        </div> <!-- end card-->
+                    </div> <!-- end col-->
+                </div> <!-- end row-->
+                <div class="row">
+                    <div class="col-xxl-12">
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="row g-0">
+                                    <div class="col-xxl-12">
+                                        <div class="">
+                                            <div class="card-header border-0 align-items-center d-flex">
+                                                <h4 class="card-title mb-0 flex-grow-1">Riwayat Pendapatan Jasa</h4>
+                                                <div>
+                                                    <button type="button" class="btn btn-soft-secondary shadow-none btn-sm" data-timeframe="3m">
+                                                        3M
+                                                    </button>
+                                                    <button type="button" class="btn btn-soft-secondary shadow-none btn-sm" data-timeframe="6m">
+                                                        6M
+                                                    </button>
+                                                    <button type="button" class="btn btn-soft-primary shadow-none btn-sm" data-timeframe="1y">
+                                                        1Y
+                                                    </button>
+                                                </div>
+                                            </div><!-- end card header -->
+                                            <div class="row g-0 text-center">
+                                                <div class="col-6 col-sm-6">
+                                                    <div class="p-3 border border-dashed border-start-0">
+                                                        <h5 class="mb-1">Rp. <span class="counter-value" data-target="{{ $angsurans }}">0</span></h5>
+                                                        <p class="text-muted mb-0">Total Pendapatan Jasa</p>
+                                                    </div>
+                                                </div>
+                                                <!--end col-->
+                                                <div class="col-6 col-sm-6">
+                                                    <div class="p-3 border border-dashed border-start-0">
+                                                        <h5 class="mb-1">Rp. <span class="counter-value" data-target="{{ $pinjaman }}">0</span></h5>
+                                                        <p class="text-muted mb-0">Total Pinjaman Keluar</p>
+                                                    </div>
+                                                </div>
+                                                <!--end col-->
+                                            </div>
+                                            <div id="line_chart_basic" data-colors='["--vz-info","--vz-success", "--vz-gray-300"]' class="apex-charts" dir="ltr"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!--end col-->
                 </div>
                 <!--end row-->
-{{--                Modals Area--}}
-                {{-- @include('dashboard.guestbook.modals.create') --}}
-                {{-- @include('dashboard.guestbook.modals.report') --}}
-                {{-- <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-header text-center">
-                                <h1 class="mb-0">Riwayat Tamu UPT TIK</h1>
-                            </div>
-                            <div class="card-body">
-                                <table id="alternative-pagination" class="table dt-responsive align-middle table-hover table-bordered" style="width:100%">
-                                    <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>Tanggal, Waktu</th>
-                                        <th>Nama</th>
-                                        <th>Unit</th>
-                                        <th>No Telepon</th>
-                                        <th>Kategori Keperluan</th>
-                                        <th>Keperluan</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($guest_books as $guest_book)
-                                        <tr>
-                                            <td>{{$loop->iteration}}</td>
-                                            <td>
-                                                {{ \Carbon\Carbon::parse($guest_book->created_at)->format('D, d M Y') }}
-                                                <br>
-                                                {{ \Carbon\Carbon::parse($guest_book->created_at)->format('H:i:s') }}
-                                            </td>
-
-                                            <td>{{$guest_book->guest->name}}</td>
-                                            <td>{{$guest_book->unit->display_name}}</td>
-                                            <td>{{substr_replace($guest_book->guest->phone, 'XXXXXX', 5, 100)}}</td>
-                                            <td>{{$guest_book->problemCategory->name}}</td>
-                                            <td>
-                                                <p class=" d-inline-block text-truncate" style="max-width: 150px;">{{ $guest_book->description }}</p>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center fw-medium">
-                                                    <button class="btn btn-sm btn-info mr-1"  data-bs-toggle="modal" data-bs-target="#showData{{$guest_book->id}}">
-                                                        <i class="ri-eye-fill"></i> <span >@lang('Lihat')</span>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#editData{{$guest_book->id}}">
-                                                        <i class="ri-pencil-line"></i> <span >@lang('Ubah')</span>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger ml-1" data-bs-toggle="modal" data-bs-target="#deleteData{{$guest_book->id}}">
-                                                        <i class="ri-delete-bin-line"></i> <span >@lang('Hapus')</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        @include('dashboard.guestbook.modals.edit')
-                                        @include('dashboard.guestbook.modals.delete')
-                                        @include('dashboard.guestbook.modals.show')
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
             </div> <!-- end .h-100-->
 
         </div> <!-- end col -->
@@ -128,6 +188,8 @@
     <script src="{{ URL::asset('assets/js/pages/form-editor.init.js') }}"></script>
     <!-- dashboard init -->
     <script src="{{ URL::asset('/assets/js/pages/dashboard-ecommerce.init.js') }}"></script>
+    <!-- Marketplace init -->
+    {{-- <script src="{{ URL::asset('assets/js/pages/dashboard-nft.init.js') }}"></script> --}}
     <script src="{{ URL::asset('assets/js/pages/datatables.init.js') }}"></script>
     <script src="{{ URL::asset('/assets/js/app.min.js') }}"></script>
     <!-- toastr -->
@@ -138,5 +200,125 @@
                 toastr.error("{{$error}}")
             @endforeach
         @endif
+    </script>
+    <script>
+        function getChartColorsArray(chartId) {
+            if (document.getElementById(chartId) !== null) {
+                var colors = document.getElementById(chartId).getAttribute("data-colors");
+                if (colors) {
+                    colors = JSON.parse(colors);
+                    return colors.map(function (value) {
+                        var newValue = value.replace(" ", "");
+                        if (newValue.indexOf(",") === -1) {
+                            var color = getComputedStyle(document.documentElement).getPropertyValue(
+                                newValue
+                            );
+                            if (color) return color;
+                            else return newValue;
+                        } else {
+                            var val = value.split(",");
+                            if (val.length == 2) {
+                                var rgbaColor = getComputedStyle(
+                                    document.documentElement
+                                ).getPropertyValue(val[0]);
+                                rgbaColor = "rgba(" + rgbaColor + "," + val[1] + ")";
+                                return rgbaColor;
+                            } else {
+                                return newValue;
+                            }
+                        }
+                    });
+                } else {
+                    console.warn('data-colors atributes not found on', chartId);
+                }
+            }
+        }
+
+        var linechartBasicColors = getChartColorsArray("line_chart_basic");
+        let months = [];
+        let totalValues = [];
+
+        // Function to fetch data based on timeframe
+        function fetchData(timeframe) {
+            // Make AJAX request to the backend to retrieve data
+            fetch(`/api/data/iuran?timeframe=${timeframe}`)
+                .then(response => response.json())
+                .then(data => {
+                    let dataArray = Object.values(data);
+                    // Filter out non-numeric keys
+                    let filteredDataArray = dataArray.filter(item => typeof item === 'object');
+                    months = [];
+                    totalValues = [];
+                    const monthNames = [
+                        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                    ];
+                    console.log(filteredDataArray);
+                    // Iterate through the response data
+                    filteredDataArray.forEach(row => {
+                        months.push(monthNames[row.month - 1]);
+                        totalValues.push(row.total_iuran);
+                    });
+                    console.log(months);
+                    // Update the chart data and categories
+                    options.xaxis.categories = months;
+                    options.series[0].data = totalValues;
+                    options.series[0].name = data.name;
+                    // Update the chart with the new data
+                    chart.updateOptions(options);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Initially fetch data for 3 months timeframe
+        fetchData('1y');
+
+        var options = {
+            series: [
+                {
+                    name: '3 Bulan',
+                    data: totalValues
+                }
+            ],
+            chart: {
+                height: 350,
+                type: 'line',
+                zoom: {
+                    enabled: false
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 3
+            },
+            colors: linechartBasicColors,
+            xaxis: {
+                categories: months,
+                labels: {
+                    rotate: -90
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#line_chart_basic"), options);
+
+        // Add an event listener to all buttons
+        document.querySelectorAll('button[data-timeframe]').forEach(button => {
+            button.addEventListener('click', function() {
+                const timeframe = this.getAttribute('data-timeframe');
+                console.log(timeframe);
+                // Fetch data based on the selected timeframe
+                fetchData(timeframe);
+            });
+        });
+
+        // Render the chart
+        chart.render();
     </script>
 @endsection

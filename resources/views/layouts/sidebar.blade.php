@@ -5,19 +5,19 @@
         <!-- Dark Logo-->
         <a href="/guestbook" class="logo logo-dark">
             <span class="logo-sm">
-                <img src="{{ URL::asset('bm-logo-mini.png') }}" alt="" height="30">
+                <img src="{{ URL::asset('bm-old.png') }}" alt="" height="30">
             </span>
             <span class="logo-lg">
-                <img src="{{ URL::asset('bm-logo.png') }}" alt="" height="45">
+                <img src="{{ URL::asset('bm-old-long.png') }}" alt="" height="45">
             </span>
         </a>
         <!-- Light Logo-->
         <a href="/beranda" class="logo logo-light">
             <span class="logo-sm">
-                <img src="{{ URL::asset('bm-logo-mini.png') }}" alt="" height="30">
+                <img src="{{ URL::asset('bm-old.png') }}" alt="" height="30">
             </span>
             <span class="logo-lg">
-                <img src="{{ URL::asset('bm-logo.png') }}" alt="" height="45">
+                <img src="{{ URL::asset('bm-old-long.png') }}" alt="" height="45">
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"

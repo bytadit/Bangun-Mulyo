@@ -6,6 +6,10 @@ use App\Models\AnggotaKelompok;
 use App\Models\Peminjam;
 use App\Models\Pinjaman;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AnggotaExport;
+use App\Imports\AnggotaImport;
+
 
 use Alert;
 use App\Models\PinjamanAnggota;
@@ -115,5 +119,32 @@ class AnggotaKelompokController extends Controller
         AnggotaKelompok::destroy($anggota_id);
         Alert::success('Sukses!', 'Data anggota kelompok berhasil dihapus!');
         return redirect()->route('detail-kelompok.index', ['kelompok' => $peminjam_id]);
+    }
+
+    public function exportAnggota(Request $request)
+    {
+        $kelompok = $request->route('kelompok');
+        $kelompok_name = Peminjam::where('id', $kelompok)->first()->nama;
+        return Excel::download(new AnggotaExport($kelompok), 'Anggota-Kelompok-'. $kelompok_name . '.xlsx');
+    }
+    public function importAnggota(Request $request)
+    {
+        $kelompok = $request->route('kelompok');
+        $request->validate([
+            'file' => 'required|mimes:csv,xlsx,xls',
+        ]);
+        $file = $request->file('file');
+        $nama_file = rand().$file->getClientOriginalName();
+        $file->move('file_anggota',$nama_file);
+        Excel::import(new AnggotaImport($kelompok), public_path('/file_anggota/'.$nama_file));
+        Alert::success('Sukses!', 'Data anggota kelompok berhasil ditambahkan!');
+        return redirect()->route('detail-kelompok.index', ['kelompok' => $kelompok]);
+        // try {
+        //     // import data
+
+        // } catch (\Exception $e) {
+        //     Alert::error('Gagal!', 'Data anggota kelompok gagal ditambahkan!');
+        //     return redirect()->route('detail-kelompok.index', ['kelompok' => $kelompok]);
+        // }
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\AngsuranController;
 use App\Http\Controllers\AngsuranKelompokController;
 use App\Http\Controllers\AngsuranSingleController;
 use App\Http\Controllers\CetakDokumen;
+use App\Http\Controllers\ChartDataController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DetailSingleController;
 use App\Http\Controllers\InventarisController;
@@ -42,6 +43,15 @@ Route::get('/angsuran-kelompok', [AngsuranKelompokController::class, 'daftarPemi
 Route::get('/angsuran-single', [AngsuranSingleController::class, 'daftarPeminjam'])->name('angsuran-single.daftar-peminjam');
 Route::get('/angsuran-kelompok/{kelompok}/pinjaman-kelompok', [AngsuranKelompokController::class, 'daftarPinjaman'])->name('angsuran-kelompok.daftar-pinjaman');
 Route::get('/angsuran-single/{single}/pinjaman-single', [AngsuranSingleController::class, 'daftarPinjaman'])->name('angsuran-single.daftar-pinjaman');
+
+// get data chart
+Route::get('/api/data/iuran', [ChartDataController::class, 'getIuranData'])->name('get-data-iuran)');
+
+// ekspor sheet
+Route::get('/anggota/export_excel/{kelompok}', [AnggotaKelompokController::class, 'exportAnggota'])->name('export-anggota');
+
+// import sheet
+Route::post('/anggota/import_excel/{kelompok}', [AnggotaKelompokController::class, 'importAnggota'])->name('import-anggota');
 
 // cetak dokumen
 Route::post('/cetak-proposal', [CetakDokumen::class, 'proposalPinjaman'])->name('cetak.proposal');

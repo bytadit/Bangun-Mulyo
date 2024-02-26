@@ -10,6 +10,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "maatwebsite/excel": "^3.1",
         "phpoffice/phpword": "^1.2",
         "realrashid/sweet-alert": "^7.1",
         "riskihajar/terbilang": "2.0"

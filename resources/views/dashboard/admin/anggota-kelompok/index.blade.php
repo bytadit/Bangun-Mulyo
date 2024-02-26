@@ -186,6 +186,7 @@
             <div class="h-100">
                 <!--end row-->
                 @include('dashboard.admin.anggota-kelompok.modals.create')
+                {{-- @include('dashboard.admin.anggota-kelompok.modals.import') --}}
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
@@ -193,6 +194,14 @@
                                 <h3 class="card-title mb-0 flex-grow-1">Daftar Anggota Kelompok {{ $kelompok_name }}</h3>
                                 <div class="flex-shrink-0">
                                     <div>
+                                        <a href="{{ route('export-anggota', ['kelompok' => $kelompok]) }}" class="btn btn-success btn-sm shadow-none">
+                                            <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
+                                            Export Data
+                                        </a>
+                                        {{-- <button type="button" class="btn btn-warning btn-sm shadow-none" data-bs-toggle="modal" data-bs-target="#importDataAnggotaKelompok">
+                                            <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
+                                            Import Data
+                                        </button> --}}
                                         <button type="button" class="btn btn-primary btn-sm shadow-none" data-bs-toggle="modal" data-bs-target="#createDataAnggotaKelompok">
                                             <i class="ri-menu-add-line label-icon align-middle fs-16 me-2"></i>
                                             Tambah Anggota

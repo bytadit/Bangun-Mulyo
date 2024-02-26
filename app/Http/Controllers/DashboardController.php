@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Angsuran;
+use App\Models\Peminjam;
+use App\Models\Pinjaman;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -16,7 +19,12 @@ class DashboardController extends Controller
         // $units = Unit::orderBy('display_name', 'ASC')->get();
         // $problems = ProblemCategory::orderBy('name', 'ASC')->get();
         return view('dashboard.admin.index', [
-            'title' => 'Halaman Admin'
+            'title' => 'Halaman Admin',
+            'kelompoks' => Peminjam::where('jenis_peminjam', 1)->get(),
+            'singles' => Peminjam::where('jenis_peminjam', 2)->get(),
+            'angsurans' => Angsuran::sum('iuran'),
+            'pinjaman' => Pinjaman::sum('jumlah_pinjaman'),
+            'pinjamans' => Pinjaman::all()
         ]);
     }
 
